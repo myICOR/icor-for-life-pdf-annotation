@@ -39,8 +39,11 @@ function stubObsidian() {
   class Notice { constructor(text) { Notice.shown.push(text); } }
   Notice.shown = [];
   class Modal { constructor(app) { this.app = app; this.contentEl = fakeEl(); this.titleEl = fakeEl(); } open() {} close() {} }
-  const debounce = (fn) => { const d = () => fn(); d.cancel = () => {}; return d; };
+  /* Every debounced call runs at once and is counted, so a test can see
+     that something was scheduled. */
+  const debounce = (fn) => { const d = (...args) => { stub.debounced++; return fn(...args); }; d.cancel = () => {}; return d; };
   const stub = {
+    debounced: 0,
     Component, Plugin, TFile, TFolder, View, ItemView, FileView, MarkdownView, PluginSettingTab, Notice, Modal, debounce,
     Keymap: { isModEvent: () => false },
     Platform: { isMobile: false, isPhone: false, isDesktopApp: true },
@@ -67,7 +70,7 @@ function fakeApp(obsidian) {
   const app = {
     layoutReady,
     workspace: { ...obsidian.events(), onLayoutReady: (cb) => layoutReady.push(cb), getLeavesOfType: () => [], getMostRecentLeaf: () => null, getActiveViewOfType: () => null, getRightLeaf: () => null, revealLeaf: async () => {}, openLinkText: async () => {} },
-    vault: { ...obsidian.events(), getMarkdownFiles: () => [], getFiles: () => [], getFileByPath: () => null, getAbstractFileByPath: () => null, cachedRead: async () => '', getResourcePath: () => '' },
+    vault: { ...obsidian.events(), handlers: {}, on(name, fn) { (this.handlers[name] ??= []).push(fn); return { ref: true }; }, getMarkdownFiles: () => [], getFiles: () => [], getFileByPath: () => null, getAbstractFileByPath: () => null, cachedRead: async () => '', getResourcePath: () => '' },
     metadataCache: { ...obsidian.events(), resolvedLinks: {}, getFileCache: () => null, getFirstLinkpathDest: () => null },
     fileManager: { processFrontMatter: async () => {}, trashFile: async () => {}, getAvailablePathForAttachment: async (n) => n },
   };
@@ -111,4 +114,21 @@ test('the settings tab declares one group per settings group with the rows', asy
   assert.deepEqual(Array.from(defs).flatMap((g) => Array.from(g.items, (i) => i.control.type)), ['folder', 'dropdown', 'toggle', 'toggle', 'toggle']);
   await plugin.settingTabs[0].setControlValue('defaultColor', 'blue');
   assert.equal(plugin.settings.lastColor, 'blue');
+});
+
+test('a canvas file that appears fully formed schedules the canvas sync', async () => {
+  const { plugin, app, obsidian } = await loadPlugin();
+  await plugin.onload();
+  for (const cb of app.layoutReady) cb();
+  assert.deepEqual(Object.keys(app.vault.handlers).sort(), ['create', 'delete', 'modify', 'rename']);
+  const fire = (name, ...args) => { for (const fn of app.vault.handlers[name]) fn(...args); };
+  obsidian.debounced = 0;
+  fire('create', new obsidian.TFile('Maps/new.canvas'));
+  assert.ok(obsidian.debounced > 0, 'the sync was scheduled by the create');
+  obsidian.debounced = 0;
+  fire('create', new obsidian.TFile('Notes/plain.md'));
+  assert.equal(obsidian.debounced, 0, 'a new note is the cache event\'s job');
+  fire('modify', new obsidian.TFile('Maps/new.canvas'));
+  assert.ok(obsidian.debounced > 0, 'a modified canvas schedules too');
+  plugin.onunload();
 });

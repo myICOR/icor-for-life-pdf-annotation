@@ -337,6 +337,17 @@ export default class PdfAnnotationPlugin extends Plugin {
       this.sync.schedule();
     });
     this.registerEvent(once);
+    /* A canvas that appears fully formed (a script, a sync from another
+       device, a duplicate) fires no `modify`; `forget` first, because a
+       create after a delete must not hit the parse cache by mtime. A new
+       .md file reaches the store through `changed`. */
+    this.registerEvent(
+      vault.on('create', (file) => {
+        if (!(file instanceof TFile) || file.extension !== 'canvas') return;
+        this.sync.forget(file.path);
+        this.sync.schedule();
+      }),
+    );
     this.registerEvent(
       vault.on('delete', (file) => {
         if (!(file instanceof TFile)) return;
