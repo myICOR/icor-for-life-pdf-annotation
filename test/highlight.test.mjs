@@ -155,3 +155,14 @@ test('a document note names the PDF by path or by file name', () => {
   assert.equal(namesPdf('other.pdf', '04 Inner World/Documents/_files/paper.pdf'), false);
   assert.equal(namesPdf(undefined, 'x.pdf'), false);
 });
+
+test('a letter-spaced scan is joined, and noise stays empty', async () => {
+  const { cleanScannedQuote } = await import('./build/pure.mjs');
+  assert.equal(cleanScannedQuote('N s a t z s t e u e r'), 'Nsatzsteuer');
+  assert.equal(cleanScannedQuote('Der U m s a t z ist hoch'), 'Der Umsatz ist hoch');
+  assert.equal(cleanScannedQuote('a b'), 'ab');
+  assert.equal(cleanScannedQuote('x word y word z'), '', 'mostly single characters after joining');
+  assert.equal(cleanScannedQuote('word a word b word c d'), 'word a word b word cd');
+  assert.equal(cleanScannedQuote('  '), '');
+  assert.equal(cleanScannedQuote('plain words stay as they are'), 'plain words stay as they are');
+});

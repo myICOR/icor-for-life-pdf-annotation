@@ -7,6 +7,7 @@
  * through to the text layer. */
 import type { Highlight, Rect } from '../model/highlight';
 import { pdfRectToView, isMatrix } from '../model/rects';
+import { markOwn } from '../dom';
 import { isPageView } from '../internals';
 import type { ObsidianViewer, PageView, PdfEventBus, PdfViewerChild } from '../internals';
 import type { HighlightStore } from '../store/HighlightStore';
@@ -76,7 +77,7 @@ export class HighlightLayer {
   paint(page: PageView): void {
     const pdfPath = this.deps.pdfPath();
     let layer = page.div.querySelector<HTMLElement>(`:scope > .${LAYER_CLASS}`);
-    if (!layer) layer = page.div.createDiv({ cls: LAYER_CLASS });
+    if (!layer) layer = markOwn(page.div.createDiv({ cls: LAYER_CLASS }));
     layer.empty();
     if (!pdfPath) return;
     const m = page.viewport.transform;

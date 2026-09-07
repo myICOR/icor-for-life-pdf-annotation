@@ -61,6 +61,13 @@ export const SETTING_ROWS: readonly SettingRow[] = [
   {
     type: 'toggle',
     group: 'Viewer',
+    key: 'openPanelOnPdf',
+    name: 'Open the highlights panel when a PDF opens',
+    desc: 'Reveals the "PDF highlights" panel in the right sidebar the first time a PDF becomes active in a session. The panel follows the active PDF from then on. The ribbon icon and the button in the PDF toolbar open it at any time.',
+  },
+  {
+    type: 'toggle',
+    group: 'Viewer',
     key: 'hoverCards',
     name: 'Hover cards',
     desc: 'Show the first lines of the note when the pointer rests on a painted highlight.',

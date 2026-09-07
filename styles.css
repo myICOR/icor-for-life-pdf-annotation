@@ -123,17 +123,50 @@
 }
 
 .icor-pdfa-row-body {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
 }
 
 .icor-pdfa-row-quote {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
   color: var(--text-normal);
   font-size: var(--font-ui-small);
 }
 
+.icor-pdfa-row-page {
+  margin-bottom: var(--size-2-1);
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}
+
+.icor-pdfa-row-actions {
+  display: none;
+  align-items: center;
+  gap: var(--size-2-2);
+  margin-top: var(--size-4-1);
+}
+
+.icor-pdfa-row:hover .icor-pdfa-row-actions, .icor-pdfa-row:focus-within .icor-pdfa-row-actions, .is-mobile .icor-pdfa-row-actions {
+  display: flex;
+}
+
+.icor-pdfa-row-actions .clickable-icon {
+  padding: var(--size-2-1);
+}
+
+.icor-pdfa-pdf-button {
+  cursor: pointer;
+}
+
 .icor-pdfa-row-thumb {
+  display: block;
   max-width: 100%;
+  max-height: calc(var(--size-4-16) * 2);
+  width: auto;
+  object-fit: contain;
   border: var(--border-width) solid var(--background-modifier-border);
   border-radius: var(--radius-s);
 }
@@ -164,6 +197,8 @@
   top: 0;
   left: 0;
   z-index: 2;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
   transform-origin: 0 0;
@@ -171,6 +206,7 @@
 
 .icor-pdfa-rect {
   position: absolute;
+  min-height: var(--size-4-3);
   border-radius: var(--radius-xs);
   background-color: rgba(var(--icor-pdfa-color-rgb), 0.35);
   mix-blend-mode: multiply;
@@ -178,7 +214,8 @@
   cursor: pointer;
 }
 
-.theme-dark .icor-pdfa-rect {
+/* The page is white unless the viewer themes it; screen only then. */
+.pdf-container.mod-themed .icor-pdfa-rect {
   mix-blend-mode: screen;
 }
 
@@ -226,18 +263,26 @@
   box-shadow: var(--shadow-s);
 }
 
-.icor-pdfa-toolbar.is-hidden {
+.icor-pdfa-toolbar.is-hidden, .icor-pdfa-tool.is-hidden {
   display: none;
 }
 
 .icor-pdfa-swatch {
+  box-sizing: border-box;
   width: var(--size-4-4);
   height: var(--size-4-4);
   margin: 0 var(--size-2-1);
+  padding: 0;
   border: var(--size-2-1) solid transparent;
   border-radius: 50%;
   background-color: var(--icor-pdfa-color);
   cursor: pointer;
+}
+
+.icor-pdfa-swatch.is-small {
+  width: var(--size-4-3);
+  height: var(--size-4-3);
+  margin: 0;
 }
 
 .icor-pdfa-swatch:hover, .icor-pdfa-swatch:focus-visible {

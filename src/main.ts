@@ -16,7 +16,7 @@ import { debugLog } from './log';
 import { notePreview } from './model/highlight';
 import type { Highlight, HighlightColor } from './model/highlight';
 import { buildEmbed, buildHighlightLink, buildNoteLink, nativeSubpath } from './model/links';
-import { copyText, openInRightSidebar } from './open';
+import { copyText, openNoteForWriting } from './open';
 import { PdfRegistry } from './pdf/registry';
 import { registerHighlightCards } from './render/highlightCard';
 import { DEFAULT_SETTINGS, normaliseSettings } from './settings/model';
@@ -34,6 +34,7 @@ export default class PdfAnnotationPlugin extends Plugin {
   private drops!: CanvasDrops;
   private registry!: PdfRegistry;
   private lastPdf: TFile | null = null;
+  private panelRevealed = false;
 
   override async onload(): Promise<void> {
     this.settings = normaliseSettings(await this.loadData());
@@ -52,6 +53,7 @@ export default class PdfAnnotationPlugin extends Plugin {
       copyLink: (h) => void this.copyHighlightLink(h),
       copyEmbed: (h) => void this.copyEmbed(h),
       preview: (h) => this.preview(h),
+      showPanel: () => void this.showSidebar(),
       log,
     });
 
@@ -59,10 +61,15 @@ export default class PdfAnnotationPlugin extends Plugin {
       store: this.store,
       openHighlight: (h, evt) => void this.openHighlight(h, evt),
       openNote: (h) => void this.openNote(h),
+      copyLink: (h) => void this.copyHighlightLink(h),
+      copyEmbed: (h) => void this.copyEmbed(h),
+      setColor: (h, color) => void this.registry.setColor(h, color),
+      remove: (h) => void this.registry.confirmDelete(h),
       dragSource: (el, h) => this.dragSource(el, h),
       imageUrl: (h) => this.imageUrl(h),
       preview: (h) => this.preview(h),
     }));
+    this.addRibbonIcon('highlighter', 'Open highlights panel', () => void this.showSidebar());
     this.addSettingTab(new PdfaSettingsTab(this.app, this));
     registerHighlightCards(this, {
       openHighlight: (h, evt) => void this.openHighlight(h, evt),
@@ -136,7 +143,7 @@ export default class PdfAnnotationPlugin extends Plugin {
       new Notice(`Note not found: ${h.notePath}`);
       return;
     }
-    await openInRightSidebar(this.app, file);
+    await openNoteForWriting(this.app, file);
   }
 
   async copyHighlightLink(h: Highlight): Promise<void> {
@@ -199,6 +206,11 @@ export default class PdfAnnotationPlugin extends Plugin {
     if (pdf) this.lastPdf = pdf;
     if (!this.lastPdf) return;
     for (const view of this.sidebars()) view.setPdf(this.lastPdf);
+    /* The first PDF of the session reveals the panel, once. */
+    if (pdf && this.settings.openPanelOnPdf && !this.panelRevealed) {
+      this.panelRevealed = true;
+      void this.showSidebar();
+    }
   }
 
   async showSidebar(): Promise<void> {

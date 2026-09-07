@@ -231,6 +231,8 @@ export interface PdfViewerChild {
   pdfViewer: ObsidianViewer | null;
   getPage(page: number): PageView | undefined;
   applySubpath(subpath: string): void;
+  /* The viewer's toolbar; the panel button goes into its right side. */
+  toolbar?: { toolbarRightEl?: HTMLElement } | null;
   getTextSelectionRangeStr?(pageEl: HTMLElement): string | null;
   clearTextHighlight?(): void;
   highlightText?(page: number, range: [[number, number], [number, number]]): void;
@@ -251,6 +253,7 @@ const CHILD_MEMBERS: Record<string, MemberKind> = {
   containerEl: 'element',
   pdfViewer: 'object',
   getPage: 'function',
+  toolbar: 'object',
   applySubpath: 'function',
   getTextSelectionRangeStr: 'function',
   clearTextHighlight: 'function',

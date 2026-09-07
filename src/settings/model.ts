@@ -12,6 +12,8 @@ export interface PdfaSettings {
   lastColor: HighlightColor;
   hoverCards: boolean;
   selectionToolbar: boolean;
+  /* Reveal the highlights panel the first time a PDF becomes active. */
+  openPanelOnPdf: boolean;
   debug: boolean;
 }
 
@@ -23,6 +25,7 @@ export const DEFAULT_SETTINGS: PdfaSettings = {
   lastColor: DEFAULT_COLOR,
   hoverCards: true,
   selectionToolbar: true,
+  openPanelOnPdf: true,
   debug: false,
 };
 
@@ -54,6 +57,7 @@ export function normaliseSettings(raw: unknown): PdfaSettings {
     lastColor: oneOf(r.lastColor, HIGHLIGHT_COLORS, defaultColor),
     hoverCards: bool(r.hoverCards, DEFAULT_SETTINGS.hoverCards),
     selectionToolbar: bool(r.selectionToolbar, DEFAULT_SETTINGS.selectionToolbar),
+    openPanelOnPdf: bool(r.openPanelOnPdf, DEFAULT_SETTINGS.openPanelOnPdf),
     debug: bool(r.debug, DEFAULT_SETTINGS.debug),
   };
 }

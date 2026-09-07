@@ -6,7 +6,8 @@
  * pixel ratio (once on a phone), renders one at a time. */
 import { Keymap, Notice, Platform } from 'obsidian';
 import type { Rect } from '../model/highlight';
-import { normaliseRect } from '../model/highlight';
+import { markOwn } from '../dom';
+import { cleanScannedQuote, normaliseRect } from '../model/highlight';
 import { rectHeight, rectWidth, viewRectToPdf, isMatrix } from '../model/rects';
 import { isPageView, targetElement } from '../internals';
 import type { PageView, PdfViewerChild } from '../internals';
@@ -78,7 +79,7 @@ export class AreaTool {
     evt.preventDefault();
     evt.stopPropagation();
     const { x, y } = this.pagePoint(page.el, evt);
-    const box = page.el.createDiv({ cls: ['icor-pdfa-box', `is-${this.deps.color()}`] });
+    const box = markOwn(page.el.createDiv({ cls: ['icor-pdfa-box', `is-${this.deps.color()}`] }));
     this.drawing = { pageEl: page.el, pageView, box, x0: x, y0: y, pointerId: evt.pointerId };
     this.draw(x, y);
     try {
@@ -110,7 +111,7 @@ export class AreaTool {
     if (!isMatrix(m)) return;
     const rect = viewRectToPdf(view, m);
     const items = textItemsOf(d.pageView);
-    const quote = items ? textInRect(items, rect) : '';
+    const quote = items ? cleanScannedQuote(textInRect(items, rect)) : '';
     const page = Number(d.pageEl.dataset.pageNumber);
     let image: ArrayBuffer | null = null;
     try {

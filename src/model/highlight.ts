@@ -300,6 +300,34 @@ export function firstContentLine(text: string): number {
   return -1;
 }
 
+/* The text under a drawn box on a scanned, OCR'd page often comes out
+   letter-spaced ("N s a t z s t e u e r"). Runs of single characters
+   separated by single spaces are joined into one word; when more than
+   half of the tokens are still single characters the text is noise and
+   the quote stays empty. */
+export function cleanScannedQuote(text: string): string {
+  const tokens = collapseWhitespace(text).split(' ').filter((t) => t.length > 0);
+  if (tokens.length === 0) return '';
+  const joined: string[] = [];
+  let run: string[] = [];
+  const flush = (): void => {
+    if (run.length >= 2) joined.push(run.join(''));
+    else joined.push(...run);
+    run = [];
+  };
+  for (const t of tokens) {
+    if ([...t].length === 1) run.push(t);
+    else {
+      flush();
+      joined.push(t);
+    }
+  }
+  flush();
+  const singles = joined.filter((t) => [...t].length === 1).length;
+  if (singles * 2 > joined.length) return '';
+  return joined.join(' ');
+}
+
 /* Top of the page first (PDF y grows upward), then left to right. */
 export function compareOnPage(a: Highlight, b: Highlight): number {
   if (a.page !== b.page) return a.page - b.page;

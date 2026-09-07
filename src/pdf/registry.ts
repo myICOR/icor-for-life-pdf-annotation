@@ -8,7 +8,9 @@
  * are a different component and stay unpainted. */
 import { Notice } from 'obsidian';
 import type { App, TFile, WorkspaceLeaf } from 'obsidian';
+import { buttonLike } from '../dom';
 import { makeDragSource } from '../drag';
+import { setIcon, setTooltip } from 'obsidian';
 import { asPdfView, eventBusOf, isHtmlElement, requireChild, requireViewer, targetElement, whenViewerReady } from '../internals';
 import type { ObsidianViewer, PdfEventBus, PdfView, PdfViewerChild } from '../internals';
 import { degrade } from '../log';
@@ -36,6 +38,7 @@ export interface RegistryHost {
   copyLink(h: Highlight): void;
   copyEmbed(h: Highlight): void;
   preview(h: Highlight): Promise<string>;
+  showPanel(): void;
   log(message: string): void;
 }
 
@@ -54,6 +57,7 @@ export interface PdfBinding {
   /* The highlight last clicked in this view. */
   current: Highlight | null;
   anchor: DOMRect | null;
+  panelButton: HTMLElement | null;
   controller: AbortController;
 }
 
@@ -233,7 +237,7 @@ export class PdfRegistry {
       degrade(`${FEATURE}: pdf viewer.pdfViewer.dom.viewerContainerEl`);
       return;
     }
-    const binding: PdfBinding = { view, child, viewer, bus, container, layer: null, toolbar: null, hover: null, area: null, current: null, anchor: null, controller: new AbortController() };
+    const binding: PdfBinding = { view, child, viewer, bus, container, layer: null, toolbar: null, hover: null, area: null, current: null, anchor: null, panelButton: null, controller: new AbortController() };
     const settings = (): PdfaSettings => this.host.settings();
     binding.hover = new HoverCards(container, { enabled: () => settings().hoverCards, preview: (h) => this.host.preview(h) });
     binding.layer = new HighlightLayer(child, viewer, bus, {
@@ -265,6 +269,7 @@ export class PdfRegistry {
     });
     binding.area.attach();
     this.wireSelection(binding);
+    binding.panelButton = this.panelButton(child);
     this.bindings.set(binding.view, binding);
     view.register(() => this.unbind(view));
     log(`pdf wired: ${view.file?.path ?? '(no file)'}`);
@@ -273,6 +278,16 @@ export class PdfRegistry {
       this.pendingReveal = null;
       binding.layer.reveal(h);
     }
+  }
+
+  /* A "Highlights" button at the right of the viewer's own toolbar. */
+  private panelButton(child: PdfViewerChild): HTMLElement | null {
+    const right = child.toolbar?.toolbarRightEl;
+    if (!isHtmlElement(right)) return null;
+    const button = buttonLike(right.createDiv({ cls: ['clickable-icon', 'icor-pdfa-pdf-button'] }), 'Highlights', () => this.host.showPanel());
+    setIcon(button, 'highlighter');
+    setTooltip(button, 'Highlights');
+    return button;
   }
 
   private wireSelection(binding: PdfBinding): void {
@@ -373,6 +388,7 @@ export class PdfRegistry {
     this.bindings.delete(view);
     if (this.lastActive === binding) this.lastActive = null;
     binding.controller.abort();
+    binding.panelButton?.remove();
     binding.area?.dispose();
     binding.toolbar?.el.remove();
     binding.hover?.dispose();

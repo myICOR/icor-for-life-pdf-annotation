@@ -98,7 +98,7 @@ test('every private member is named in internals.ts and guarded before use', () 
 });
 
 test('every class the plugin adds carries the icor-pdfa- prefix, apart from what it borrows on purpose', () => {
-  const borrowed = new Set(['clickable-icon', 'mod-warning', 'is-empty', 'is-active', 'is-hidden', 'is-selected', 'is-flashing']);
+  const borrowed = new Set(['clickable-icon', 'mod-warning', 'is-empty', 'is-active', 'is-hidden', 'is-selected', 'is-flashing', 'is-small']);
   for (const f of sources) {
     const text = readFileSync(f, 'utf8');
     for (const m of text.matchAll(/(?:addClass|cls:)\s*\(?\s*(\[[^\]]*\]|'[^']+'|`[^`]+`|[A-Z_]+_CLASS)/g)) {
@@ -128,7 +128,7 @@ test('the stylesheet: prefixed selectors, Obsidian variables only, no hex, no pi
     }
   }
   for (const m of css.matchAll(/(?:^|[\s;{])(color|background[a-z-]*|z-index|font-weight|height|width|border-radius|stroke)\s*:\s*([^;]+);/g)) {
-    assert.match(m[2].trim(), /^var\(--|^calc\(|^rgba?\(var\(--|^\d+%?$|^currentColor$|^none$|^transparent$|^fit-content$/, `${m[1]}: ${m[2].trim()} is not an Obsidian variable`);
+    assert.match(m[2].trim(), /^var\(--|^calc\(|^rgba?\(var\(--|^\d+%?$|^currentColor$|^none$|^auto$|^transparent$|^fit-content$/, `${m[1]}: ${m[2].trim()} is not an Obsidian variable`);
   }
 });
 

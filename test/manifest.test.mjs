@@ -108,12 +108,13 @@ test('every setting has exactly one row and a default the normaliser keeps', () 
   assert.equal(new Set(keys).size, keys.length, 'a setting with two rows');
   assert.deepEqual(normaliseSettings(DEFAULT_SETTINGS), DEFAULT_SETTINGS);
   assert.deepEqual(normaliseSettings({ highlightsFolder: '', defaultColor: 'pink', hoverCards: 'yes' }), DEFAULT_SETTINGS, 'bad values fall back');
-  assert.deepEqual(normaliseSettings({ highlightsFolder: '/Highlights/', defaultColor: 'blue', lastColor: 'red', hoverCards: false, selectionToolbar: false, debug: true }), {
+  assert.deepEqual(normaliseSettings({ highlightsFolder: '/Highlights/', defaultColor: 'blue', lastColor: 'red', hoverCards: false, selectionToolbar: false, openPanelOnPdf: false, debug: true }), {
     highlightsFolder: 'Highlights',
     defaultColor: 'blue',
     lastColor: 'red',
     hoverCards: false,
     selectionToolbar: false,
+    openPanelOnPdf: false,
     debug: true,
   });
   assert.equal(normaliseSettings({ defaultColor: 'green' }).lastColor, 'green', 'the last colour starts as the default');

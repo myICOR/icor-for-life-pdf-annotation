@@ -7,6 +7,7 @@
 import { Platform, setIcon, setTooltip } from 'obsidian';
 import { COLOR_NAMES, HIGHLIGHT_COLORS } from '../model/highlight';
 import type { Highlight, HighlightColor } from '../model/highlight';
+import { buttonLike, markOwn } from '../dom';
 import { targetElement } from '../internals';
 
 export type ToolbarMode = { kind: 'new'; color: HighlightColor } | { kind: 'existing'; highlight: Highlight };
@@ -30,7 +31,7 @@ export class SelectionToolbar {
   private deleteButton!: HTMLElement;
 
   constructor(private readonly container: HTMLElement, private readonly actions: ToolbarActions) {
-    this.el = container.createDiv({ cls: [TOOLBAR_CLASS, 'is-hidden'] });
+    this.el = markOwn(container.createDiv({ cls: [TOOLBAR_CLASS, 'is-hidden'] }));
     this.el.setAttribute('role', 'toolbar');
     this.el.setAttribute('aria-label', 'Highlight');
     /* A press on the toolbar must not collapse the selection it acts on. */
@@ -41,10 +42,9 @@ export class SelectionToolbar {
 
   private build(): void {
     for (const color of HIGHLIGHT_COLORS) {
-      const swatch = this.el.createEl('button', { cls: ['icor-pdfa-swatch', `is-${color}`] });
-      swatch.setAttribute('aria-label', COLOR_NAMES[color]);
+      /* A div, not a button: the theme restyles plain buttons as ink. */
+      const swatch = buttonLike(this.el.createDiv({ cls: ['icor-pdfa-swatch', `is-${color}`] }), COLOR_NAMES[color], () => this.actions.pickColor(color));
       setTooltip(swatch, COLOR_NAMES[color]);
-      swatch.addEventListener('click', () => this.actions.pickColor(color));
       this.swatches.set(color, swatch);
     }
     this.el.createDiv({ cls: 'icor-pdfa-toolbar-divider' });
@@ -55,11 +55,9 @@ export class SelectionToolbar {
   }
 
   private button(icon: string, label: string, onClick: () => void): HTMLElement {
-    const button = this.el.createEl('button', { cls: ['icor-pdfa-tool', 'clickable-icon'] });
+    const button = buttonLike(this.el.createDiv({ cls: ['icor-pdfa-tool', 'clickable-icon'] }), label, onClick);
     setIcon(button, icon);
     setTooltip(button, label);
-    button.setAttribute('aria-label', label);
-    button.addEventListener('click', onClick);
     return button;
   }
 

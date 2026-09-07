@@ -10,6 +10,7 @@ import type { MarkdownPostProcessorContext, Plugin } from 'obsidian';
 import { firstContentLine, readHighlight } from '../model/highlight';
 import type { Highlight } from '../model/highlight';
 import { basename } from '../model/naming';
+import { markOwn } from '../dom';
 
 export interface CardDeps {
   openHighlight(h: Highlight, evt: MouseEvent | KeyboardEvent): void;
@@ -48,7 +49,7 @@ function isQuoteSection(el: HTMLElement, ctx: MarkdownPostProcessorContext): boo
 }
 
 export function renderCard(el: HTMLElement, h: Highlight, deps: CardDeps): void {
-  el.addClass(CARD_CLASS, `is-${h.color}`);
+  markOwn(el).addClass(CARD_CLASS, `is-${h.color}`);
   el.setAttribute('data-icor-highlight', h.id);
   const quote = el.querySelector('blockquote');
   if (quote) quote.addClass('icor-pdfa-quote');

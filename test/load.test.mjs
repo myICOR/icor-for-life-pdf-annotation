@@ -28,6 +28,7 @@ function stubObsidian() {
     registerView(type, factory) { this.views[type] = factory; }
     registerMarkdownPostProcessor(fn) { this.postProcessors.push(fn); }
     addSettingTab(tab) { this.settingTabs.push(tab); }
+    addRibbonIcon() { return fakeEl(); }
   }
   class TFile { constructor(path) { this.path = path; this.extension = path.slice(path.lastIndexOf('.') + 1); this.basename = path.slice(path.lastIndexOf('/') + 1, path.lastIndexOf('.')); this.stat = { mtime: 1 }; } }
   class TFolder {}
@@ -111,7 +112,7 @@ test('the settings tab declares one group per settings group with the rows', asy
   /* Arrays made inside the VM are of its realm; copy them into ours before
      a strict deep-equal (it compares prototypes). */
   assert.deepEqual(Array.from(defs, (g) => g.heading), ['Highlights', 'Viewer', 'Advanced']);
-  assert.deepEqual(Array.from(defs).flatMap((g) => Array.from(g.items, (i) => i.control.type)), ['folder', 'dropdown', 'toggle', 'toggle', 'toggle']);
+  assert.deepEqual(Array.from(defs).flatMap((g) => Array.from(g.items, (i) => i.control.type)), ['folder', 'dropdown', 'toggle', 'toggle', 'toggle', 'toggle']);
   await plugin.settingTabs[0].setControlValue('defaultColor', 'blue');
   assert.equal(plugin.settings.lastColor, 'blue');
 });

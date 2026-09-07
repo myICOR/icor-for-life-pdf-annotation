@@ -3,6 +3,7 @@
  * element per PDF view inside the scrolling container. Mouse only; touch
  * has no hover. */
 import { debounce } from 'obsidian';
+import { markOwn } from '../dom';
 import type { Highlight } from '../model/highlight';
 
 export interface HoverDeps {
@@ -18,7 +19,7 @@ export class HoverCards {
   private readonly show = debounce((h: Highlight, rect: DOMRect) => void this.render(h, rect), 250, true);
 
   constructor(private readonly container: HTMLElement, private readonly deps: HoverDeps) {
-    this.el = container.createDiv({ cls: ['icor-pdfa-hover', 'is-hidden'] });
+    this.el = markOwn(container.createDiv({ cls: ['icor-pdfa-hover', 'is-hidden'] }));
     this.el.setAttribute('role', 'tooltip');
   }
 
