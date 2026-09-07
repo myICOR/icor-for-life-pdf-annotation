@@ -1,6 +1,6 @@
 # Architecture
 
-ICOR for Life - PDF Annotation, 0.1.0. What the modules are, which of
+ICOR for Life - PDF Annotation. What the modules are, which of
 them reach into Obsidian's unpublished PDF viewer, canvas and drag
 manager, how a highlight is persisted, and what to re-check when
 Obsidian updates.
