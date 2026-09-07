@@ -4,7 +4,7 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.1.2] - Unreleased
+## [0.1.2] - 2026-09-07
 
 Vex's security audit of 0.1.1 (APPROVED; one MEDIUM and three LOW in the
 source) and Flint's review, both applied before the Scaffold bundles the
