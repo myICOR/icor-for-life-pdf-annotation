@@ -1,0 +1,288 @@
+/* ICOR for Life - PDF Annotation. Every value is one of Obsidian's own
+   variables, so a theme (INKLINE first) restyles everything by redefining
+   them; the six highlight colours are the app's base colours, mapped once
+   per colour onto --icor-pdfa-color and --icor-pdfa-color-rgb on every
+   element that carries the colour as a modifier class. */
+
+/* ---------- The six colours ---------- */
+
+.icor-pdfa-card.is-yellow, .icor-pdfa-image.is-yellow, .icor-pdfa-row.is-yellow, .icor-pdfa-rect.is-yellow, .icor-pdfa-swatch.is-yellow, .icor-pdfa-box.is-yellow {
+  --icor-pdfa-color: var(--color-yellow);
+  --icor-pdfa-color-rgb: var(--color-yellow-rgb);
+}
+.icor-pdfa-card.is-red, .icor-pdfa-image.is-red, .icor-pdfa-row.is-red, .icor-pdfa-rect.is-red, .icor-pdfa-swatch.is-red, .icor-pdfa-box.is-red {
+  --icor-pdfa-color: var(--color-red);
+  --icor-pdfa-color-rgb: var(--color-red-rgb);
+}
+.icor-pdfa-card.is-orange, .icor-pdfa-image.is-orange, .icor-pdfa-row.is-orange, .icor-pdfa-rect.is-orange, .icor-pdfa-swatch.is-orange, .icor-pdfa-box.is-orange {
+  --icor-pdfa-color: var(--color-orange);
+  --icor-pdfa-color-rgb: var(--color-orange-rgb);
+}
+.icor-pdfa-card.is-green, .icor-pdfa-image.is-green, .icor-pdfa-row.is-green, .icor-pdfa-rect.is-green, .icor-pdfa-swatch.is-green, .icor-pdfa-box.is-green {
+  --icor-pdfa-color: var(--color-green);
+  --icor-pdfa-color-rgb: var(--color-green-rgb);
+}
+.icor-pdfa-card.is-blue, .icor-pdfa-image.is-blue, .icor-pdfa-row.is-blue, .icor-pdfa-rect.is-blue, .icor-pdfa-swatch.is-blue, .icor-pdfa-box.is-blue {
+  --icor-pdfa-color: var(--color-blue);
+  --icor-pdfa-color-rgb: var(--color-blue-rgb);
+}
+.icor-pdfa-card.is-purple, .icor-pdfa-image.is-purple, .icor-pdfa-row.is-purple, .icor-pdfa-rect.is-purple, .icor-pdfa-swatch.is-purple, .icor-pdfa-box.is-purple {
+  --icor-pdfa-color: var(--color-purple);
+  --icor-pdfa-color-rgb: var(--color-purple-rgb);
+}
+
+/* ---------- The highlight card (reading view, embeds, canvas cards) ---------- */
+
+.icor-pdfa-card .icor-pdfa-quote {
+  margin: 0;
+  padding: var(--size-4-2) var(--size-4-3);
+  border-left: var(--size-4-1) solid var(--icor-pdfa-color);
+  border-radius: var(--radius-s);
+  background-color: rgba(var(--icor-pdfa-color-rgb), 0.12);
+}
+
+.icor-pdfa-card .icor-pdfa-quote p {
+  margin: 0;
+}
+
+.icor-pdfa-source {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-1);
+  margin-top: var(--size-4-1);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  cursor: pointer;
+}
+
+.icor-pdfa-source:hover, .icor-pdfa-source:focus-visible {
+  color: var(--text-accent);
+}
+
+.icor-pdfa-source-icon .svg-icon {
+  --icon-size: var(--icon-xs);
+}
+
+.icor-pdfa-image .internal-embed img {
+  border: var(--size-4-1) solid var(--icor-pdfa-color);
+  border-radius: var(--radius-s);
+}
+
+/* The properties block stays out of a card or an embed of a highlight
+   note; the full note keeps it. */
+.canvas-node .icor-pdf-highlight .metadata-container, .markdown-embed .icor-pdf-highlight .metadata-container {
+  display: none;
+}
+
+/* ---------- The sidebar ---------- */
+
+.icor-pdfa-sidebar {
+  padding: var(--size-4-2);
+}
+
+.icor-pdfa-sidebar-header {
+  padding: var(--size-4-1) var(--size-4-2);
+  color: var(--text-normal);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-ui-small);
+}
+
+.icor-pdfa-empty {
+  padding: var(--size-4-2);
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+.icor-pdfa-page {
+  padding: var(--size-4-3) var(--size-4-2) var(--size-4-1);
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+  text-transform: uppercase;
+}
+
+.icor-pdfa-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2);
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+
+.icor-pdfa-row:hover, .icor-pdfa-row:focus-visible {
+  background-color: var(--background-modifier-hover);
+}
+
+.icor-pdfa-dot {
+  flex: 0 0 auto;
+  width: var(--size-4-3);
+  height: var(--size-4-3);
+  margin-top: var(--size-4-1);
+  border-radius: 50%;
+  background-color: var(--icor-pdfa-color);
+}
+
+.icor-pdfa-row-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.icor-pdfa-row-quote {
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+}
+
+.icor-pdfa-row-thumb {
+  max-width: 100%;
+  border: var(--border-width) solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.icor-pdfa-row-note {
+  margin-top: var(--size-2-1);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.icor-pdfa-row-note.is-empty {
+  display: none;
+}
+
+.icor-pdfa-row-open {
+  flex: 0 0 auto;
+  opacity: 0;
+}
+
+.icor-pdfa-row:hover .icor-pdfa-row-open, .icor-pdfa-row:focus-within .icor-pdfa-row-open, .is-mobile .icor-pdfa-row-open {
+  opacity: 1;
+}
+
+/* ---------- The layer on every page ---------- */
+
+.icor-pdfa-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  transform-origin: 0 0;
+}
+
+.icor-pdfa-rect {
+  position: absolute;
+  border-radius: var(--radius-xs);
+  background-color: rgba(var(--icor-pdfa-color-rgb), 0.35);
+  mix-blend-mode: multiply;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.theme-dark .icor-pdfa-rect {
+  mix-blend-mode: screen;
+}
+
+.icor-pdfa-rect:hover, .icor-pdfa-rect.is-active {
+  background-color: rgba(var(--icor-pdfa-color-rgb), 0.55);
+}
+
+.icor-pdfa-rect.is-flashing {
+  animation: icor-pdfa-flash 2s ease-out;
+}
+
+@keyframes icor-pdfa-flash {
+  0% {
+    box-shadow: 0 0 0 var(--size-4-2) rgba(var(--icor-pdfa-color-rgb), 0.9);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--icor-pdfa-color-rgb), 0);
+  }
+}
+
+/* The box being drawn by the area tool. */
+.icor-pdfa-box {
+  position: absolute;
+  border: var(--size-2-1) dashed var(--icor-pdfa-color);
+  background-color: rgba(var(--icor-pdfa-color-rgb), 0.15);
+  pointer-events: none;
+}
+
+.icor-pdfa-armed .pdf-viewer-container {
+  cursor: crosshair;
+}
+
+/* ---------- The floating toolbar and the hover card ---------- */
+
+.icor-pdfa-toolbar {
+  position: absolute;
+  z-index: var(--layer-popover);
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-1);
+  padding: var(--size-2-2) var(--size-4-1);
+  border: var(--border-width) solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background-color: var(--background-primary);
+  box-shadow: var(--shadow-s);
+}
+
+.icor-pdfa-toolbar.is-hidden {
+  display: none;
+}
+
+.icor-pdfa-swatch {
+  width: var(--size-4-4);
+  height: var(--size-4-4);
+  margin: 0 var(--size-2-1);
+  border: var(--size-2-1) solid transparent;
+  border-radius: 50%;
+  background-color: var(--icor-pdfa-color);
+  cursor: pointer;
+}
+
+.icor-pdfa-swatch:hover, .icor-pdfa-swatch:focus-visible {
+  border-color: var(--text-muted);
+}
+
+.icor-pdfa-swatch.is-selected {
+  border-color: var(--text-normal);
+}
+
+.icor-pdfa-toolbar-divider {
+  width: var(--border-width);
+  height: var(--size-4-4);
+  margin: 0 var(--size-2-1);
+  background-color: var(--background-modifier-border);
+}
+
+.is-mobile .icor-pdfa-toolbar .clickable-icon, .is-mobile .icor-pdfa-swatch {
+  min-width: var(--size-4-8);
+  min-height: var(--size-4-8);
+}
+
+.icor-pdfa-hover {
+  position: absolute;
+  z-index: var(--layer-popover);
+  max-width: calc(var(--popover-width) / 2);
+  padding: var(--size-4-2) var(--size-4-3);
+  border: var(--border-width) solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background-color: var(--background-primary);
+  box-shadow: var(--shadow-s);
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+  pointer-events: none;
+}
+
+.icor-pdfa-hover.is-hidden {
+  display: none;
+}
+
+.icor-pdfa-hover-note {
+  color: var(--text-normal);
+}
+
+.icor-pdfa-hover-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
