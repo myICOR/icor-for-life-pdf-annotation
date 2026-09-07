@@ -1,7 +1,7 @@
 {
   "id": "icor-for-life-pdf-annotation",
   "name": "ICOR for Life - PDF Annotation",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "1.13.0",
   "description": "Highlight text or draw a box on a PDF and get a note in the vault for it, with a deep link back, a card on any canvas by drag and drop, and a sidebar of every highlight in the open PDF. Part of the ICOR for Life suite.",
   "author": "myICOR",

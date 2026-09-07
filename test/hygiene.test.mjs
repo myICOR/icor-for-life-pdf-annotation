@@ -117,7 +117,7 @@ test('every class the plugin adds carries the icor-pdfa- prefix, apart from what
 
 test('the stylesheet: prefixed selectors, Obsidian variables only, no hex, no pixel, no !important', () => {
   const css = read('styles.css').replace(/\/\*[\s\S]*?\*\//g, '');
-  assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b/i, 'a hex colour');
+  assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b/i, 'a hex color');
   assert.doesNotMatch(css, /!important/);
   assert.doesNotMatch(css, /\d(px|em|rem)\b/, 'a literal length; sizes come from --size-* and --radius-*');
   for (const m of css.matchAll(/([^{}]+)\{/g)) {

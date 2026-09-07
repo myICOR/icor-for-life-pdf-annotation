@@ -25,7 +25,7 @@ test('the alias is the quote without link-breaking characters, or the area', () 
   assert.equal(buildEmbed({ ...rect, image: null }), '![[H/r#^quote]]');
 });
 
-test('the parser reads page, selection, rect and colour and ignores the rest', () => {
+test('the parser reads page, selection, rect and color and ignores the rest', () => {
   assert.deepEqual(parseSubpath('#page=3&selection=16,0,18,42&color=yellow'), { page: 3, selection: [16, 0, 18, 42], color: 'yellow' });
   assert.deepEqual(parseSubpath('page=5&rect=100,200.46,10.12,20&color=blue&zoom=2'), { page: 5, rect: [10.12, 20, 100, 200.46], color: 'blue' });
   assert.deepEqual(parseSubpath('page=2&color=pink&selection=1,2,3'), { page: 2 });

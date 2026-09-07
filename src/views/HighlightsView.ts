@@ -1,11 +1,11 @@
 /* The right-sidebar panel "PDF highlights": the highlights of the PDF in
  * the most recently active PDF tab, grouped by page. A row shows the
- * colour, the page, the quote (three lines) or the image, and the first
+ * color, the page, the quote (three lines) or the image, and the first
  * line of the note; a click scrolls the PDF to the highlight and flashes
  * it (opening the PDF first when it is not open); the actions under the
- * row and the context menu change the colour, open the note, copy the
+ * row and the context menu change the color, open the note, copy the
  * link or the embed, delete. The row drags onto a canvas. */
-import { ItemView, Keymap, Menu, setIcon, setTooltip } from 'obsidian';
+import { ItemView, Keymap, Menu, Platform, setIcon, setTooltip } from 'obsidian';
 import type { TFile, WorkspaceLeaf } from 'obsidian';
 import { VIEW_TYPE } from '../constants';
 import { buttonLike, markOwn } from '../dom';
@@ -28,7 +28,14 @@ export interface SidebarDeps {
 
 export const DISPLAY_TEXT = 'PDF highlights';
 export const EMPTY_NO_PDF = 'Open a PDF to see its highlights here.';
-export const EMPTY_NO_HIGHLIGHTS = 'No highlights in this PDF yet. Select text or hold Cmd and drag a box.';
+/* The modifier by platform; a phone has none, so it gets the command. */
+export function modifierName(): string {
+  return Platform.isMacOS ? 'Cmd' : 'Ctrl';
+}
+
+export function emptyNoHighlights(): string {
+  return Platform.isMobile ? 'No highlights in this PDF yet. Select text, or run "Draw area highlight" for a box.' : `No highlights in this PDF yet. Select text or hold ${modifierName()} and drag a box.`;
+}
 
 export class HighlightsView extends ItemView {
   private pdf: TFile | null = null;
@@ -89,7 +96,7 @@ export class HighlightsView extends ItemView {
     header.setText(this.pdf.basename);
     const highlights = this.deps.store.forPdf(this.pdf.path);
     if (highlights.length === 0) {
-      contentEl.createDiv({ cls: 'icor-pdfa-empty', text: EMPTY_NO_HIGHLIGHTS });
+      contentEl.createDiv({ cls: 'icor-pdfa-empty', text: emptyNoHighlights() });
       return;
     }
     const list = contentEl.createDiv({ cls: 'icor-pdfa-list' });
@@ -123,7 +130,7 @@ export class HighlightsView extends ItemView {
       note.toggleClass('is-empty', text.length === 0);
     });
     this.renderActions(body, h);
-    setTooltip(row, 'Show in the PDF. Cmd-click opens the note.');
+    setTooltip(row, Platform.isMobile ? 'Show in the PDF.' : `Show in the PDF. ${modifierName()}-click opens the note.`);
     buttonLike(row, h.quote || `Area on page ${h.page}`, (evt) => {
       if (Keymap.isModEvent(evt)) this.deps.openNote(h);
       else this.deps.openHighlight(h, evt);

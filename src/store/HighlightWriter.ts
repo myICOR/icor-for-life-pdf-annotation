@@ -1,4 +1,4 @@
-/* Every write to a highlight note: create, recolour, the canvas fields,
+/* Every write to a highlight note: create, recolor, the canvas fields,
  * delete. The note is created in one `vault.create` with the text the pure
  * builder makes; later changes go through `fileManager.processFrontMatter`
  * so Obsidian's own YAML handling keeps the rest of the frontmatter as it
@@ -7,7 +7,7 @@
 import { TFile, TFolder, normalizePath } from 'obsidian';
 import type { App } from 'obsidian';
 import type { Anchor, Highlight, HighlightColor, Rect, TextSelection } from '../model/highlight';
-import { buildNoteText, isoLocal, namesPdf, newId, sortRectsTopDown, stampOf, targetOf, wikilink } from '../model/highlight';
+import { buildNoteText, isOwnImage, isoLocal, namesPdf, newId, sortRectsTopDown, stampOf, targetOf, wikilink } from '../model/highlight';
 import { ancestors, folderFor, imageFileName, noteBaseName, uniquePath } from '../model/naming';
 import type { HighlightStore } from './HighlightStore';
 
@@ -73,7 +73,7 @@ export class HighlightWriter {
     await this.app.fileManager.processFrontMatter(file, (fm: Record<string, unknown>) => {
       fm.color = color;
     });
-    this.deps.log(`highlight recoloured: ${file.path}`);
+    this.deps.log(`highlight recolored: ${file.path}`);
   }
 
   /* Writes `canvases` and `linked_notes` only when they changed. */
@@ -93,10 +93,19 @@ export class HighlightWriter {
   async delete(h: Highlight): Promise<void> {
     const file = this.store.noteFileOf(h);
     if (!file) return;
-    const image = h.image ? this.app.metadataCache.getFirstLinkpathDest(h.image, h.notePath) : null;
+    const image = this.ownImageOf(h);
     await this.app.fileManager.trashFile(file);
-    if (image instanceof TFile && this.linkCount(image.path, file.path) === 0) await this.app.fileManager.trashFile(image);
+    if (image && this.linkCount(image.path, file.path) === 0) await this.app.fileManager.trashFile(image);
     this.deps.log(`highlight deleted: ${file.path}`);
+  }
+
+  /* The image that goes with the note: only the PNG this plugin wrote for
+     this highlight (its own name shape), never another file a crafted
+     `image` field points at. */
+  ownImageOf(h: Highlight): TFile | null {
+    if (!h.image) return null;
+    const image = this.app.metadataCache.getFirstLinkpathDest(h.image, h.notePath);
+    return image instanceof TFile && isOwnImage(image.extension, image.basename, h) ? image : null;
   }
 
   /* The `type: document` note whose `source_file` or `digital_location`

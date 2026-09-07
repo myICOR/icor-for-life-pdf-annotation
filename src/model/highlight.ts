@@ -84,7 +84,9 @@ export function linkTarget(value: unknown): string | null {
   const s = value.trim();
   if (s.length === 0) return null;
   const m = /^!?\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|[^\]]*)?\]\]$/.exec(s);
-  return (m?.[1] ?? s).trim() || null;
+  /* A target that would break the link it goes into is no target. */
+  const target = (m?.[1] ?? s).trim();
+  return target.length > 0 && !/[[\]|#]/.test(target) ? target : null;
 }
 
 export function wikilink(target: string): string {
@@ -158,7 +160,8 @@ export function readHighlight(frontmatter: unknown, notePath: string): Highlight
   if (!isRecord(frontmatter)) return null;
   if (frontmatter[TYPE_FIELD] !== NOTE_TYPE_VALUE) return null;
   const id = frontmatter.highlight_id;
-  if (typeof id !== 'string' || id.length === 0) return null;
+  /* The id lands in a CSS attribute selector; only a plain token passes. */
+  if (typeof id !== 'string' || !/^[a-z0-9_-]{1,64}$/i.test(id)) return null;
   const sourceFile = linkTarget(frontmatter.source_file);
   if (!sourceFile) return null;
   const page = frontmatter.page;
@@ -276,7 +279,7 @@ export function notePreview(text: string, maxLines = 3, maxChars = 200): string 
   return `${out.slice(0, maxChars - 1).trimEnd()}…`;
 }
 
-/* The body with the quote line replaced (a colour change never touches
+/* The body with the quote line replaced (a color change never touches
    it; a re-anchoring would). Returns the text unchanged when there is no
    quote line to replace. */
 export function replaceQuoteLine(text: string, line: string): string {
@@ -326,6 +329,12 @@ export function cleanScannedQuote(text: string): string {
   const singles = joined.filter((t) => [...t].length === 1).length;
   if (singles * 2 > joined.length) return '';
   return joined.join(' ');
+}
+
+/* The plugin names an image `<pdf slug>-p<page>-<id>.png`; only such a
+   file is ever trashed with its note. */
+export function isOwnImage(extension: string, basename: string, h: Pick<Highlight, 'page' | 'id'>): boolean {
+  return extension === 'png' && basename.endsWith(`-p${h.page}-${h.id}`);
 }
 
 /* Top of the page first (PDF y grows upward), then left to right. */

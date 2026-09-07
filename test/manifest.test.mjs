@@ -117,7 +117,7 @@ test('every setting has exactly one row and a default the normaliser keeps', () 
     openPanelOnPdf: false,
     debug: true,
   });
-  assert.equal(normaliseSettings({ defaultColor: 'green' }).lastColor, 'green', 'the last colour starts as the default');
+  assert.equal(normaliseSettings({ defaultColor: 'green' }).lastColor, 'green', 'the last color starts as the default');
   for (const row of SETTING_ROWS) {
     assert.match(row.name, /^[A-Z]/, `${row.key}: name`);
     assert.ok(row.desc.endsWith('.'), `${row.key}: description ends with a period`);

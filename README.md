@@ -1,17 +1,18 @@
 # ICOR for Life - PDF Annotation
 
 Highlights on Obsidian's built-in PDF viewer that are notes in the vault.
-Select text in a PDF and a small toolbar appears: pick a colour, copy a
+Select text in a PDF and a small toolbar appears: pick a color, copy a
 link, add a note. Hold Cmd (Ctrl on Windows and Linux) and drag to
 highlight an area, which is saved as a PNG. Every highlight is one
-markdown note: the position, the colour and the quote in the frontmatter,
+markdown note: the position, the color and the quote in the frontmatter,
 your own thoughts in the body. Every highlight is painted back over the
 PDF, opens from a deep link, drags onto a canvas as a card that shows just
 the quote or the image, and is listed in a sidebar for the open PDF.
 
-Part of the ICOR for Life suite. Source-available; see LICENSE. Read
-alongside ICOR for Life - Canvases, which owns the canvas side; the two
-plugins share a file format and never write each other's keys.
+Part of the ICOR for Life suite. Source-available; see LICENSE. The
+canvas side needs nothing beyond Obsidian's core Canvas: a drop creates
+a card on any canvas, and the plugin reads canvas files and never
+writes them.
 
 ## Install
 
@@ -28,8 +29,8 @@ selection:
 
 | Control | What it does |
 | --- | --- |
-| Six colour dots | Save the selection as a highlight in that colour. The last colour you pick is the colour of the next highlight. |
-| Copy highlight link | Save the highlight (in the last colour) and copy a wikilink to the PDF that opens at the highlight. |
+| Six color dots | Save the selection as a highlight in that color. The last color you pick is the color of the next highlight. |
+| Copy highlight link | Save the highlight (in the last color) and copy a wikilink to the PDF that opens at the highlight. |
 | Copy embed | Save the highlight and copy `![[note#^quote]]`, an embed of the quote for any note. |
 | Add note | Save the highlight and open its note in the right sidebar. |
 
@@ -51,9 +52,9 @@ Obsidian puts attachments for the note (Settings, Files and links,
 
 ## The painted highlights
 
-Every highlight of the open PDF is painted over its page in its colour and
+Every highlight of the open PDF is painted over its page in its color and
 follows the page through zoom, rotation and reload. Click one for the
-toolbar: the dots change its colour; Copy highlight link; Copy embed;
+toolbar: the dots change its color; Copy highlight link; Copy embed;
 Open note (in the right sidebar); Delete (asks first, then trashes the
 note and, when nothing else links to it, the image). Rest the pointer on
 one to see the first lines of its note (off under Settings, Viewer). Drag
@@ -109,7 +110,7 @@ written as wikilinks so the graph, backlinks and Bases treat them as
 real links.
 
 In reading view, in an embed and on a canvas card the quote block is
-styled as a card in the highlight's colour with a source line under it,
+styled as a card in the highlight's color with a source line under it,
 "paper, page 3", that opens the PDF at the highlight; the properties
 block is hidden inside cards and embeds and shown in the full note. The
 editor shows the plain blockquote.
@@ -150,7 +151,7 @@ files are read, never written.
 
 **Open highlights sidebar** opens the "PDF highlights" view on the right:
 the highlights of the most recently focused PDF, grouped by page, each
-with its colour, the quote or the image, and the first line of its note.
+with its color, the quote or the image, and the first line of its note.
 Click a row to show the highlight in the PDF (Cmd-click opens the note);
 the button on the row opens the note; the row drags onto a canvas.
 
@@ -158,14 +159,14 @@ the button on the row opens the note; the row drags onto a canvas.
 
 Open highlights sidebar, Copy highlight link, Copy link to highlight note,
 Copy highlight embed, Highlight the selection, Add a note to the selection,
-Draw area highlight, Delete highlight, Cycle highlight colour. None has a
-default hotkey. The link, embed, delete and colour commands act on the
+Draw area highlight, Delete highlight, Cycle highlight color. None has a
+default hotkey. The link, embed, delete and color commands act on the
 highlight last clicked in the PDF, or on the active note when it is a
 highlight note.
 
 ## Settings
 
-Highlights folder; Default colour (the next highlight's colour, after which
+Highlights folder; Default color (the next highlight's color, after which
 the toolbar remembers the last one picked); Toolbar on selection; Hover
 cards; Debug logging.
 

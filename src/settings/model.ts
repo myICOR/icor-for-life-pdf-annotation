@@ -1,6 +1,6 @@
 /* The settings, their defaults, and the one normaliser that turns whatever
  * data.json holds into a valid record. `lastColor` is state the plugin
- * keeps between sessions (the colour of the last highlight made), not a
+ * keeps between sessions (the color of the last highlight made), not a
  * row on the settings page. */
 import { DEFAULT_COLOR, HIGHLIGHT_COLORS } from '../model/highlight';
 import type { HighlightColor } from '../model/highlight';
@@ -44,7 +44,10 @@ function oneOf<T extends string>(v: unknown, options: readonly T[], fallback: T)
    trailing slash, never empty. */
 export function cleanFolder(v: unknown, fallback: string): string {
   if (typeof v !== 'string') return fallback;
-  const clean = v.replace(/\\/g, '/').replace(/\/+/g, '/').replace(/^\/|\/$/g, '').trim();
+  const parts = v.replace(/\\/g, '/').split('/').map((p) => p.trim()).filter((p) => p.length > 0);
+  /* A dot segment could point above the vault root. */
+  if (parts.some((p) => p === '.' || p === '..')) return fallback;
+  const clean = parts.join('/');
   return clean.length > 0 ? clean : fallback;
 }
 

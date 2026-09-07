@@ -1,6 +1,6 @@
 /* The highlight card: in a highlight note, and in every embed and canvas
  * card of one, the quote block (the body's first line, block id `quote`)
- * is styled as a card with the highlight's colour and gets a source line
+ * is styled as a card with the highlight's color and gets a source line
  * under it, a link back to the PDF page that opens the highlight; the
  * image line of a rect highlight is styled the same. A Markdown
  * post-processor does it, so reading view, embeds and canvas cards all

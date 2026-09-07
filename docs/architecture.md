@@ -87,6 +87,8 @@ before shipping on it.
 | `view.canvas` on the canvas view | object | The canvas object of a canvas view; core's own drop of a file draggable makes a card without the subpath (Flint, `handleDrop` at 3232270), so the plugin's capture-phase drop calls `createFileNode` itself. | `getViewData=function(){return $d(this.canvas.data)}` |
 | `canvas.createFileNode({pos, size, file, subpath, save, focus})` | function | The card, with the block subpath. | `createFileNode=function(e){var t=e.pos,n=e.size` |
 | `canvas.posFromEvt(evt)`, `canvas.readonly` | function, boolean | Client coordinates to canvas units; the lock. | `posFromEvt=function(e){return this.posFromDom(this.domPosFromEvt(e))}` and `this.readonly=!1,this.history=` |
+| `child.toolbar.toolbarRightEl` | element | The right side of the viewer's own toolbar; the plugin's "Highlights" button goes there, removed with the binding. | `toolbarRightEl` (app.js, the toolbar class near offset 2611747) |
+| `.pdf-container.mod-themed` | CSS | Set when the viewer themes the page background; the plugin's rectangles blend with `screen` only then, `multiply` on a white page. | `o.addClass("mod-themed")` and, in app.css, `.pdf-container.mod-themed` |
 | `window.pdfjsLib.setLayerDimensions` | pdf.js global | Typed in the adapter, not used: the layer is sized by CSS to the page's content box instead. | `pdf.min.mjs`: `function setLayerDimensions(t,e)` |
 
 Not used, and known: `child.subpathHighlight`, `child.getMarkdownLink`,

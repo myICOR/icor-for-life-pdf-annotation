@@ -1,5 +1,5 @@
 /* The .canvas file format as this plugin reads it: JSON Canvas (nodes,
- * edges). The plugin never writes a .canvas file. The Canvases plugin's own
+ * edges). The plugin never writes a .canvas file. A sibling plugin's own
  * keys (`icorShape`, `icorStyle` on a node, `metadata.icorCanvases` at the
  * top) are read through the spread and never written. Pure. */
 

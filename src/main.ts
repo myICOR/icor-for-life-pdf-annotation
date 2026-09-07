@@ -320,7 +320,7 @@ export default class PdfAnnotationPlugin extends Plugin {
     });
     this.addCommand({
       id: 'cycle-color',
-      name: 'Cycle highlight colour',
+      name: 'Cycle highlight color',
       icon: 'palette',
       checkCallback: (checking) => {
         const h = this.currentHighlight();

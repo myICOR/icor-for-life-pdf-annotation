@@ -41,7 +41,7 @@ export class PdfaSettingsTab extends PluginSettingTab {
 
   override async setControlValue(key: string, value: unknown): Promise<void> {
     const next = normaliseSettings({ ...this.plugin.settings, [key]: value });
-    /* A new default colour is the next highlight's colour. */
+    /* A new default color is the next highlight's color. */
     if (key === 'defaultColor') next.lastColor = next.defaultColor;
     this.plugin.settings = next;
     await this.plugin.saveSettings();

@@ -1,5 +1,5 @@
-/* The floating toolbar: above a fresh text selection (the colours, copy
- * link, copy embed, add note) and above a clicked highlight (the colours
+/* The floating toolbar: above a fresh text selection (the colors, copy
+ * link, copy embed, add note) and above a clicked highlight (the colors
  * change it; copy link, copy embed, open note, delete). One element per
  * PDF view, inside the scrolling container so it scrolls with the page,
  * hidden by Escape, an outside press, or a collapsed selection. On a phone

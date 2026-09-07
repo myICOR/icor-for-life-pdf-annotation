@@ -168,7 +168,7 @@ export class PdfRegistry {
   }
 
   async confirmDelete(h: Highlight): Promise<void> {
-    if (!(await confirmDelete(this.host.app, basename(h.notePath)))) return;
+    if (!(await confirmDelete(this.host.app, basename(h.notePath), this.host.writer.ownImageOf(h) !== null))) return;
     try {
       await this.host.writer.delete(h);
       this.host.store.remove(h.notePath);
@@ -200,8 +200,8 @@ export class PdfRegistry {
         if (mode?.kind === 'existing' && mode.highlight.id === h.id && binding.anchor) binding.toolbar?.show({ kind: 'existing', highlight: updated }, binding.anchor);
       }
     } catch (error) {
-      this.host.log(`recolour failed: ${String(error)}`);
-      new Notice(`Could not change the colour: ${error instanceof Error ? error.message : String(error)}`);
+      this.host.log(`recolor failed: ${String(error)}`);
+      new Notice(`Could not change the color: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

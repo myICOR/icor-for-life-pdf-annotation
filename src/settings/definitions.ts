@@ -47,8 +47,8 @@ export const SETTING_ROWS: readonly SettingRow[] = [
     type: 'dropdown',
     group: 'Highlights',
     key: 'defaultColor',
-    name: 'Default colour',
-    desc: 'The colour of the next highlight after this setting changes. The toolbar remembers the last colour you picked from then on.',
+    name: 'Default color',
+    desc: 'The color of the next highlight after this setting changes. The toolbar remembers the last color you picked from then on.',
     options: COLOR_NAMES,
   },
   {
@@ -56,7 +56,7 @@ export const SETTING_ROWS: readonly SettingRow[] = [
     group: 'Viewer',
     key: 'selectionToolbar',
     name: 'Toolbar on selection',
-    desc: 'Show the small toolbar above a text selection in a PDF: the colours, copy link, add note. Off, the commands still work on the current selection.',
+    desc: 'Show the small toolbar above a text selection in a PDF: the colors, copy link, add note. Off, the commands still work on the current selection.',
   },
   {
     type: 'toggle',
