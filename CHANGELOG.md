@@ -4,7 +4,7 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.1.1] - Unreleased
+## [0.1.1] - 2026-09-07
 
 Tom's first test: nothing painted, ink pills for swatches, no panel to
 find. Larry's live diagnosis through the CLI.
@@ -36,9 +36,10 @@ find. Larry's live diagnosis through the CLI.
 - Painted rectangles are at least a line high, so a thin one-line
   highlight is clickable.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-09-07
 
-The first build, for Tom's test. Built on Flint's feasibility read of the
+The first build, for Tom's test. An internal build: never tagged and never
+released; 0.1.1 is the first published version. Built on Flint's feasibility read of the
 1.13.7 bundle and Pax's Heptabase and PDF++ research.
 
 ### Added
