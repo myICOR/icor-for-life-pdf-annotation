@@ -275,6 +275,11 @@ export function asPdfView(view: View | null | undefined): PdfView | null {
   return view as PdfView;
 }
 
+/* Runs `callback` with the viewer's child now, or once it has loaded. */
+export function whenViewerReady(view: PdfView, callback: (child: PdfViewerChild) => void): void {
+  view.viewer.then(callback);
+}
+
 export function requireChild(child: unknown, members: readonly ChildMember[], feature: string): child is PdfViewerChild {
   const gone = missing(child, CHILD_MEMBERS, members);
   if (gone.length === 0) return true;

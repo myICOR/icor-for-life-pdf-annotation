@@ -24,7 +24,7 @@ export default defineConfig([
     rules: {
       'obsidianmd/ui/sentence-case': ['warn', {
         brands: ['ICOR', 'Obsidian'],
-        acronyms: ['ID'],
+        acronyms: ['ID', 'PDF', 'PNG'],
       }],
     },
   },

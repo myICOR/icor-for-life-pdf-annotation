@@ -98,7 +98,7 @@ test('every private member is named in internals.ts and guarded before use', () 
 });
 
 test('every class the plugin adds carries the icor-pdfa- prefix, apart from what it borrows on purpose', () => {
-  const borrowed = new Set(['clickable-icon', 'is-empty', 'is-active', 'is-hidden', 'is-selected', 'is-flashing', 'is-armed']);
+  const borrowed = new Set(['clickable-icon', 'mod-warning', 'is-empty', 'is-active', 'is-hidden', 'is-selected', 'is-flashing']);
   for (const f of sources) {
     const text = readFileSync(f, 'utf8');
     for (const m of text.matchAll(/(?:addClass|cls:)\s*\(?\s*(\[[^\]]*\]|'[^']+'|`[^`]+`|[A-Z_]+_CLASS)/g)) {

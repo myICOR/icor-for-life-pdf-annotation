@@ -280,7 +280,8 @@ export function notePreview(text: string, maxLines = 3, maxChars = 200): string 
    it; a re-anchoring would). Returns the text unchanged when there is no
    quote line to replace. */
 export function replaceQuoteLine(text: string, line: string): string {
-  const re = new RegExp(`^> .*\\^${QUOTE_BLOCK_ID}\\s*$`, 'm');
+  /* `[ \t]*`, not `\s*`: under the m flag `\s*` would eat the line break. */
+  const re = new RegExp(`^> .*\\^${QUOTE_BLOCK_ID}[ \\t]*$`, 'm');
   return re.test(text) ? text.replace(re, line) : text;
 }
 

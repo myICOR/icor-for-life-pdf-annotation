@@ -42,13 +42,16 @@ export default class PdfAnnotationPlugin extends Plugin {
     this.writer = new HighlightWriter(this.app, this.store, { highlightsFolder: () => this.settings.highlightsFolder, log });
     this.sync = new CanvasSync(this.app, this.store, this.writer, log);
     this.drops = new CanvasDrops(this, this.app, log);
-    this.registry = new PdfRegistry(this, {
+    this.registry = new PdfRegistry({
       app: this.app,
       store: this.store,
       writer: this.writer,
       settings: () => this.settings,
       rememberColor: (color) => void this.rememberColor(color),
       openNote: (h) => void this.openNote(h),
+      copyLink: (h) => void this.copyHighlightLink(h),
+      copyEmbed: (h) => void this.copyEmbed(h),
+      preview: (h) => this.preview(h),
       log,
     });
 

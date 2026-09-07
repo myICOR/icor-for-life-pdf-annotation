@@ -39,6 +39,13 @@ export class HighlightStore {
     this.recompute();
   }
 
+  /* A highlight just written, before the cache has indexed its note, so
+     the page paints at once; the cache's own event replaces it. */
+  insert(h: Highlight): void {
+    this.byNote.set(h.notePath, h);
+    this.recompute();
+  }
+
   remove(path: string): void {
     if (this.byNote.delete(path)) this.recompute();
   }
