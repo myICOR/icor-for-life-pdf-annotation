@@ -17,7 +17,14 @@ export interface PdfaSettings {
   debug: boolean;
 }
 
-export const DEFAULT_HIGHLIGHTS_FOLDER = '04 Inner World/Documents/Highlights';
+export const DEFAULT_HIGHLIGHTS_FOLDER = '04 Inner World/Notes/Highlights';
+
+/* The default before Scaffold 1.17.0 renamed `04 Inner World/Documents` to
+   `04 Inner World/Notes`. `rememberColor` persists the whole settings
+   object, so every install that ever made a highlight holds this string in
+   data.json; left alone, the next highlight would recreate the retired
+   folder. Only this exact string is mapped; any other value is the user's. */
+export const LEGACY_HIGHLIGHTS_FOLDER = '04 Inner World/Documents/Highlights';
 
 export const DEFAULT_SETTINGS: PdfaSettings = {
   highlightsFolder: DEFAULT_HIGHLIGHTS_FOLDER,
@@ -54,8 +61,12 @@ export function cleanFolder(v: unknown, fallback: string): string {
 export function normaliseSettings(raw: unknown): PdfaSettings {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const defaultColor = oneOf(r.defaultColor, HIGHLIGHT_COLORS, DEFAULT_SETTINGS.defaultColor);
+  /* The migrated value reaches data.json on the next save the plugin
+     already makes (a color change or a settings-page edit); there is no
+     save on load, and mapping again on every load is harmless. */
+  const folder = r.highlightsFolder === LEGACY_HIGHLIGHTS_FOLDER ? DEFAULT_HIGHLIGHTS_FOLDER : r.highlightsFolder;
   return {
-    highlightsFolder: cleanFolder(r.highlightsFolder, DEFAULT_SETTINGS.highlightsFolder),
+    highlightsFolder: cleanFolder(folder, DEFAULT_SETTINGS.highlightsFolder),
     defaultColor,
     lastColor: oneOf(r.lastColor, HIGHLIGHT_COLORS, defaultColor),
     hoverCards: bool(r.hoverCards, DEFAULT_SETTINGS.hoverCards),

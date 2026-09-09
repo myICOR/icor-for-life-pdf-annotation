@@ -97,7 +97,7 @@ test('main.js loads, the plugin constructs and onload wires the commands, the vi
   assert.deepEqual(Object.keys(plugin.views), ['icor-pdf-highlights']);
   assert.equal(plugin.postProcessors.length, 1);
   assert.equal(plugin.settingTabs.length, 1);
-  assert.equal(plugin.settings.highlightsFolder, '04 Inner World/Documents/Highlights');
+  assert.equal(plugin.settings.highlightsFolder, '04 Inner World/Notes/Highlights');
   for (const cb of app.layoutReady) cb();
   /* Every command's check runs against an empty workspace without throwing
      and, with nothing to act on, reports itself unavailable. */

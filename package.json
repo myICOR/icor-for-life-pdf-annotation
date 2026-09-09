@@ -1,6 +1,6 @@
 {
   "name": "icor-for-life-pdf-annotation",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "ICOR for Life - PDF Annotation - highlights on a PDF that are notes in the vault, with deep links, canvas cards and a sidebar.",
   "license": "LicenseRef-ICOR-Source-Available-1.0",

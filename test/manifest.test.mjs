@@ -8,7 +8,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { DEFAULT_SETTINGS, PLUGIN_ID, PLUGIN_NAME, SETTING_ROWS, STATE_KEYS, VIEW_TYPE, normaliseSettings, settingKeys } from './build/pure.mjs';
+import { DEFAULT_HIGHLIGHTS_FOLDER, DEFAULT_SETTINGS, LEGACY_HIGHLIGHTS_FOLDER, PLUGIN_ID, PLUGIN_NAME, SETTING_ROWS, STATE_KEYS, VIEW_TYPE, normaliseSettings, settingKeys } from './build/pure.mjs';
 
 const repo = resolve(import.meta.dirname, '..');
 const read = (f) => readFileSync(resolve(repo, f), 'utf8');
@@ -118,6 +118,14 @@ test('every setting has exactly one row and a default the normaliser keeps', () 
     debug: true,
   });
   assert.equal(normaliseSettings({ defaultColor: 'green' }).lastColor, 'green', 'the last color starts as the default');
+  /* Scaffold 1.17.0 renamed Documents to Notes: the old default in
+     data.json follows; a folder the user chose does not. */
+  assert.equal(DEFAULT_HIGHLIGHTS_FOLDER, '04 Inner World/Notes/Highlights');
+  assert.equal(normaliseSettings({ highlightsFolder: LEGACY_HIGHLIGHTS_FOLDER }).highlightsFolder, DEFAULT_HIGHLIGHTS_FOLDER, 'the old default is migrated');
+  assert.equal(normaliseSettings({ highlightsFolder: '04 Inner World/Documents/Highlights' }).highlightsFolder, '04 Inner World/Notes/Highlights', 'the literal old string is migrated');
+  assert.equal(normaliseSettings({ highlightsFolder: '04 Inner World/Documents/My Highlights' }).highlightsFolder, '04 Inner World/Documents/My Highlights', 'a custom folder under the old root stays');
+  assert.equal(normaliseSettings({ highlightsFolder: 'Highlights' }).highlightsFolder, 'Highlights', 'a custom folder stays');
+  assert.equal(normaliseSettings({ highlightsFolder: DEFAULT_HIGHLIGHTS_FOLDER }).highlightsFolder, DEFAULT_HIGHLIGHTS_FOLDER, 'the new default is stable');
   for (const row of SETTING_ROWS) {
     assert.match(row.name, /^[A-Z]/, `${row.key}: name`);
     assert.ok(row.desc.endsWith('.'), `${row.key}: description ends with a period`);

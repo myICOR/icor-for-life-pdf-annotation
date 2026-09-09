@@ -66,7 +66,7 @@ painted rectangle takes the pointer so that it can be clicked and dragged.
 ## The highlight note
 
 One note per highlight, in the folder set under Settings, Highlights
-(default `04 Inner World/Documents/Highlights`), one subfolder per PDF,
+(default `04 Inner World/Notes/Highlights`), one subfolder per PDF,
 named `<YYYY-MM-DD-HHMMSS>-p<page>-<4 characters of the id>.md`. The note
 may be renamed or moved: the plugin finds highlights by their frontmatter,
 not their name or folder, and links to the PDF are wikilinks that
@@ -76,8 +76,8 @@ Obsidian keeps up to date on a rename.
 ---
 type: pdf-highlight
 highlight_id: k3f9x2mq7a1b               # twelve characters, made once, never changed
-source_file: "[[04 Inner World/Documents/_files/paper.pdf]]"
-document: "[[04 Inner World/Documents/paper]]"   # the type: document note for this PDF, when there is one
+source_file: "[[04 Inner World/Notes/_files/paper.pdf]]"
+document: "[[04 Inner World/Notes/paper]]"   # the type: document note for this PDF, when there is one
 page: 3                                  # 1-based
 anchor: selection                        # selection (text) or rect (a drawn box)
 selection: [16, 0, 18, 42]               # text only: begin span, begin offset, end span, end offset
@@ -120,8 +120,8 @@ editor shows the plain blockquote.
 **Copy highlight link** puts a wikilink on the clipboard:
 
 ```
-[[04 Inner World/Documents/_files/paper.pdf#page=3&selection=16,0,18,42&color=yellow|the exact selected text]]
-[[04 Inner World/Documents/_files/paper.pdf#page=5&rect=72,640.2,402.5,654.9&color=blue|p5 area]]
+[[04 Inner World/Notes/_files/paper.pdf#page=3&selection=16,0,18,42&color=yellow|the exact selected text]]
+[[04 Inner World/Notes/_files/paper.pdf#page=5&rect=72,640.2,402.5,654.9&color=blue|p5 area]]
 ```
 
 The `selection` form is the viewer's own: clicking it opens the PDF,

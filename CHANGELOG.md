@@ -4,6 +4,19 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.1.3] - 2026-09-09
+
+Scaffold 1.17.0 renames `04 Inner World/Documents` to `04 Inner World/Notes`.
+The plugin follows, and an install that never changed the folder setting
+follows with it.
+
+### Fixed
+- **The default highlights folder follows Scaffold 1.17.0**
+  (`04 Inner World/Notes/Highlights`). An install that still holds the old
+  default in its settings is moved to the new one on load; a folder you
+  chose yourself is left as it is. Existing highlight notes keep working
+  wherever they are.
+
 ## [0.1.2] - 2026-09-07
 
 Vex's security audit of 0.1.1 (APPROVED; one MEDIUM and three LOW in the
