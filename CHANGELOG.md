@@ -4,6 +4,15 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-09-21
+
+### Changed
+- Relicensed under MIT. Releases before 0.2.0 remain under the ICOR for Life
+  Source-Available License (Code) v1.0.
+- Release workflow: actions pinned to commit SHAs, the release published with `gh`, and a release run can never mint its own tag.
+- README rewritten for the person installing the plugin, not the person rebuilding it.
+- Security contact is support@myicor.com.
+
 ## [0.1.3] - 2026-09-09
 
 Scaffold 1.17.0 renames `04 Inner World/Documents` to `04 Inner World/Notes`.
