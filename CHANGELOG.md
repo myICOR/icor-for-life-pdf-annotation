@@ -4,6 +4,15 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - Unreleased
+
+### Fixed
+- **The quote and the image of a drawn box no longer merge into one
+  blockquote.** A new highlight leaves a blank line between them, and the
+  image keeps its colored frame and stays draggable. Highlight notes you
+  already have keep working and are not rewritten, so they still show the
+  old merged layout until you add that blank line yourself.
+
 ## [0.2.0] - 2026-09-21
 
 ### Changed

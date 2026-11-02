@@ -103,8 +103,9 @@ note lands on the page; the plugin's own open path scrolls to the box).
 
 A highlight is one markdown note. The plugin writes the whole note once
 (`vault.create` with the text `buildNoteText` makes: the frontmatter in
-a fixed order, the quote line with the block id `quote`, the image line
-with `image`, the `## Note` heading) and afterwards changes only the
+a fixed order, the quote line with the block id `quote`, a blank line and
+the image line with `image`, the `## Note` heading; notes from before 0.2.1
+have no blank line there and every reader of the body takes both) and afterwards changes only the
 frontmatter, through `fileManager.processFrontMatter`, so Obsidian's own
 YAML handling keeps the user's fields and the body as they are. The index
 is the metadata cache: a note is a highlight when `type: pdf-highlight`

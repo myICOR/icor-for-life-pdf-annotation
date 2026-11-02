@@ -7,7 +7,7 @@
  * show it; the editor shows the plain blockquote. */
 import { setIcon, setTooltip } from 'obsidian';
 import type { MarkdownPostProcessorContext, Plugin } from 'obsidian';
-import { firstContentLine, readHighlight } from '../model/highlight';
+import { firstContentLine, imageSectionLine, readHighlight } from '../model/highlight';
 import type { Highlight } from '../model/highlight';
 import { basename } from '../model/naming';
 import { markOwn } from '../dom';
@@ -74,8 +74,7 @@ export function registerHighlightCards(plugin: Plugin, deps: CardDeps): void {
     /* The image line of a rect highlight: the embed right after the quote. */
     if (h.anchor === 'rect' && el.querySelector('.internal-embed')) {
       const info = ctx.getSectionInfo(el);
-      const first = info ? firstContentLine(info.text) : -1;
-      if (info && info.lineStart !== first + 1) return;
+      if (info && info.lineStart !== imageSectionLine(info.text)) return;
       el.addClass('icor-pdfa-image', `is-${h.color}`);
       deps.dragSource(el, h);
     }
