@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  ID_LENGTH, NOTE_HEADING, annotationText, buildBody, buildFrontmatter, buildNoteText, compareOnPage, firstContentLine, isoLocal, linkTarget, namesPdf,
+  ID_LENGTH, NOTE_HEADING, annotationText, buildBody, buildFrontmatter, buildNoteText, compareOnPage, firstContentLine, imageSectionLine, isoLocal, linkTarget, namesPdf,
   newId, noteBody, notePreview, quoteLine, readHighlight, replaceQuoteLine, sortRectsTopDown, stampOf, targetOf, wikilink, yamlString,
 } from './build/pure.mjs';
 
@@ -84,10 +84,10 @@ test('the note text round-trips through the reader', () => {
   assert.deepEqual(Object.keys(fm), ['type', 'highlight_id', 'source_file', 'document', 'page', 'anchor', 'selection', 'rects', 'color', 'quote', 'created', 'canvases', 'linked_notes', 'cssclasses']);
 });
 
-test('the body is the quote line, the image line for a rect, a blank, the heading, a blank', () => {
+test('the body is the quote line, a blank and the image line for a rect, a blank, the heading, a blank', () => {
   assert.equal(buildBody(full), `> the "quoted" text, with a \\ backslash ^quote\n\n${NOTE_HEADING}\n\n`);
   const rect = { ...full, anchor: 'rect', selection: null, quote: '', image: '05 Assets/Images/paper-p3-abc123def456.png', rects: [[10, 10, 100, 50]] };
-  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n![[05 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
+  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n\n![[05 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
   const fm = readFrontmatter(buildNoteText(rect));
   assert.equal(fm.anchor, 'rect');
   assert.equal(fm.selection, undefined);
@@ -137,6 +137,44 @@ test('the body helpers find the annotation and the first content line', () => {
   assert.equal(firstContentLine('---\na: 1\n---\n\n'), -1);
   assert.equal(replaceQuoteLine(text, '> new ^quote'), text.replace(/^> .*\^quote$/m, '> new ^quote'));
   assert.equal(replaceQuoteLine('no quote line', '> new ^quote'), 'no quote line');
+});
+
+/* Tool Lab item 15. A note written before 0.2.1 has the image right under
+   the quote, where Markdown's lazy continuation pulls it into the blockquote;
+   a newer one leaves a blank line. Both stay in members' vaults for good. */
+const IMAGE = '![[05 Assets/Images/paper-p3-abc123def456.png]] ^image';
+const BODIES = [
+  ['old, no blank line', `> Area on page 3 ^quote\n${IMAGE}\n\n${NOTE_HEADING}\n\nMy thought\n`],
+  ['new, a blank line', `> Area on page 3 ^quote\n\n${IMAGE}\n\n${NOTE_HEADING}\n\nMy thought\n`],
+];
+
+test('a rect body leaves a blank line between the quote and the image', () => {
+  const rect = { ...full, anchor: 'rect', selection: null, quote: 'A box', image: 'a.png', rects: [[10, 10, 100, 50]] };
+  assert.deepEqual(buildBody(rect).split('\n').slice(0, 3), ['> A box ^quote', '', '![[a.png]] ^image']);
+});
+
+for (const [name, body] of BODIES) {
+  test(`both layouts round-trip, ${name}`, () => {
+    const text = `---\na: 1\n---\n${body}`;
+    const edited = replaceQuoteLine(text, '> New words ^quote');
+    assert.equal(edited, text.replace('> Area on page 3 ^quote', '> New words ^quote'));
+    assert.equal(edited.split(IMAGE).length - 1, 1, 'the image line stays, once');
+    assert.equal(replaceQuoteLine(edited, '> Area on page 3 ^quote'), text);
+    assert.equal(annotationText(text), 'My thought');
+    assert.equal(annotationText(edited), 'My thought');
+    const headless = body.replace(`${NOTE_HEADING}\n\n`, '');
+    assert.equal(annotationText(headless), 'My thought', 'a note whose heading was deleted');
+    assert.equal(annotationText(replaceQuoteLine(headless, '> New words ^quote')), 'My thought');
+  });
+}
+
+test('the image section is the next content line after the quote, in both layouts', () => {
+  const [[, old], [, fresh]] = BODIES;
+  assert.equal(imageSectionLine(`---\na: 1\n---\n${old}`), 4);
+  assert.equal(imageSectionLine(`---\na: 1\n---\n${fresh}`), 5);
+  assert.equal(imageSectionLine(fresh), 2);
+  assert.equal(imageSectionLine('> only a quote ^quote\n\n'), -1);
+  assert.equal(imageSectionLine('---\na: 1\n---\n'), -1);
 });
 
 test('ordering: page, then top of the page, then left', () => {

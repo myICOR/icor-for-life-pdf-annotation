@@ -235,11 +235,14 @@ export function buildFrontmatter(h: Highlight): string {
   return lines.join('\n');
 }
 
-/* The body: the quote line, the image line for a rect highlight, a blank
-   line, the Note heading, an empty line for the user. */
+/* The body: the quote line, a blank line and the image line for a rect
+   highlight, a blank line, the Note heading, an empty line for the user.
+   The blank line keeps the image out of the blockquote: right under it,
+   Markdown's lazy continuation merges the two. Notes written before 0.2.1
+   have no blank line there, so every reader of the body takes both. */
 export function buildBody(h: Highlight): string {
   const lines = [quoteLine(h)];
-  if (h.anchor === 'rect' && h.image) lines.push(imageLine(h.image));
+  if (h.anchor === 'rect' && h.image) lines.push('', imageLine(h.image));
   lines.push('', NOTE_HEADING, '', '');
   return lines.join('\n');
 }
@@ -300,6 +303,17 @@ export function firstContentLine(text: string): number {
     i++;
   }
   for (; i < lines.length; i++) if ((lines[i] ?? '').trim().length > 0) return i;
+  return -1;
+}
+
+/* The line of the section after the quote, where a rect highlight keeps its
+   image: the next non-blank line after the first content line, or -1 when
+   there is none. */
+export function imageSectionLine(text: string): number {
+  const first = firstContentLine(text);
+  if (first < 0) return -1;
+  const lines = text.split('\n');
+  for (let i = first + 1; i < lines.length; i++) if ((lines[i] ?? '').trim().length > 0) return i;
   return -1;
 }
 
