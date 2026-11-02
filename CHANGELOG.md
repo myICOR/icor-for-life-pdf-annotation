@@ -4,6 +4,24 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-11-02
+
+### Fixed
+- **Block references now resolve independently in area highlight notes.** The
+  quote line (`> quote ^quote`) and image embed (`![[image]] ^image`) are now
+  separated by a blank line, so each block reference resolves to just its own
+  block. Previously they were on adjacent lines, causing Markdown's lazy
+  continuation to merge them into one blockquote. This meant a canvas card
+  referencing `#^image` would show the quote with a literal `^quote` above the
+  image. Existing notes with the old format continue to work correctly.
+
+### Note on frontmatter format
+- The `rects: [[x, y, w, h]]` frontmatter field intentionally uses nested array
+  syntax, which can be mistakenly detected as a wikilink by naive parsers. This
+  format is maintained for backward compatibility and correct YAML semantics.
+  The scaffold's check-quality script has been updated to handle this pattern
+  correctly.
+
 ## [0.2.0] - 2026-09-21
 
 ### Changed

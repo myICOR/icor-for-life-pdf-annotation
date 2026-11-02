@@ -239,7 +239,7 @@ export function buildFrontmatter(h: Highlight): string {
    line, the Note heading, an empty line for the user. */
 export function buildBody(h: Highlight): string {
   const lines = [quoteLine(h)];
-  if (h.anchor === 'rect' && h.image) lines.push(imageLine(h.image));
+  if (h.anchor === 'rect' && h.image) lines.push('', imageLine(h.image));
   lines.push('', NOTE_HEADING, '', '');
   return lines.join('\n');
 }

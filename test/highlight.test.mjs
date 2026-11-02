@@ -87,7 +87,7 @@ test('the note text round-trips through the reader', () => {
 test('the body is the quote line, the image line for a rect, a blank, the heading, a blank', () => {
   assert.equal(buildBody(full), `> the "quoted" text, with a \\ backslash ^quote\n\n${NOTE_HEADING}\n\n`);
   const rect = { ...full, anchor: 'rect', selection: null, quote: '', image: '05 Assets/Images/paper-p3-abc123def456.png', rects: [[10, 10, 100, 50]] };
-  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n![[05 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
+  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n\n![[05 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
   const fm = readFrontmatter(buildNoteText(rect));
   assert.equal(fm.anchor, 'rect');
   assert.equal(fm.selection, undefined);
@@ -129,7 +129,8 @@ test('the body helpers find the annotation and the first content line', () => {
   assert.equal(annotationText(text), 'My *thought* here.\n\n- and a list');
   assert.equal(notePreview(text), 'My thought here. and a list');
   assert.equal(notePreview(buildNoteText(full)), '');
-  assert.equal(annotationText('> q ^quote\n![[i.png]] ^image\nfree text'), 'free text');
+  assert.equal(annotationText('> q ^quote\n![[i.png]] ^image\nfree text'), 'free text', 'old format without blank line');
+  assert.equal(annotationText('> q ^quote\n\n![[i.png]] ^image\nfree text'), 'free text', 'new format with blank line');
   assert.equal(notePreview('---\na: 1\n---\n' + 'x'.repeat(300)), 'x'.repeat(199) + '…');
   assert.equal(firstContentLine(buildNoteText(full)), 16, 'two fences and fourteen fields');
   assert.equal(firstContentLine('---\na: 1\n---\n\n\n> q'), 5);
