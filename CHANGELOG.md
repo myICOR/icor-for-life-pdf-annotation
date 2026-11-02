@@ -4,7 +4,7 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.2.1] - Unreleased
+## [0.2.1] - 2026-11-02
 
 ### Fixed
 - **The quote and the image of a drawn box no longer merge into one
