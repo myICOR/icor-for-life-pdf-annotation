@@ -10,7 +10,8 @@ import {
 
 /* A reader of exactly the YAML the builder writes: `key: scalar`, double
    quoted strings with \\ and \" escapes, flow arrays of numbers, strings
-   and nested arrays. Not a YAML parser; a mirror of buildFrontmatter. */
+   and nested arrays, and a bare `key:` with `  - item` lines under it.
+   Not a YAML parser; a mirror of buildFrontmatter. */
 function readFlow(s) {
   let i = 0;
   const skip = () => { while (s[i] === ' ' || s[i] === ',') i++; };
@@ -26,7 +27,11 @@ function readFlow(s) {
 function readFrontmatter(text) {
   const m = /^---\n([\s\S]*?)\n---\n/.exec(text);
   const out = {};
+  let list = null;
   for (const line of m[1].split('\n')) {
+    if (list && line.startsWith('  - ')) { list.push(readFlow(line.slice(4))); continue; }
+    if (line.endsWith(':')) { list = out[line.slice(0, -1)] = []; continue; }
+    list = null;
     const at = line.indexOf(': ');
     const key = line.slice(0, at), raw = line.slice(at + 2);
     out[key] = raw.startsWith('[') || raw.startsWith('"') ? readFlow(raw) : /^\d+$/.test(raw) ? Number(raw) : raw;
@@ -84,6 +89,18 @@ test('the note text round-trips through the reader', () => {
   assert.deepEqual(Object.keys(fm), ['type', 'highlight_id', 'source_file', 'document', 'page', 'anchor', 'selection', 'rects', 'color', 'quote', 'created', 'canvases', 'linked_notes', 'cssclasses']);
 });
 
+/* `rects: [[72, 640.2, ...]]` reads as a wikilink to a tool that scans the
+   note text for links. The block list is the same YAML value, so a note
+   written in the flow form before this change still reads the same. */
+test('rects are a block list, so no rectangle reads as a wikilink', () => {
+  const text = buildFrontmatter(full);
+  assert.match(text, /\nrects:\n {2}- \[72, 640\.2, 402\.5, 654\.9\]\n {2}- \[72, 620, 300, 634\]\ncolor: /);
+  for (const m of text.matchAll(/\[\[/g)) assert.equal(text[m.index - 1], '"', 'every [[ opens a quoted link');
+  const old = text.replace(/rects:\n(?: {2}- .*\n)+/, 'rects: [[72, 640.2, 402.5, 654.9], [72, 620, 300, 634]]\n');
+  assert.notEqual(old, text);
+  assert.deepEqual(readHighlight(readFrontmatter(`${old}\n`), full.notePath), readHighlight(readFrontmatter(`${text}\n`), full.notePath));
+});
+
 test('the body is the quote line, a blank and the image line for a rect, a blank, the heading, a blank', () => {
   assert.equal(buildBody(full), `> the "quoted" text, with a \\ backslash ^quote\n\n${NOTE_HEADING}\n\n`);
   const rect = { ...full, anchor: 'rect', selection: null, quote: '', image: '05 Assets/Images/paper-p3-abc123def456.png', rects: [[10, 10, 100, 50]] };
@@ -131,7 +148,7 @@ test('the body helpers find the annotation and the first content line', () => {
   assert.equal(notePreview(buildNoteText(full)), '');
   assert.equal(annotationText('> q ^quote\n![[i.png]] ^image\nfree text'), 'free text');
   assert.equal(notePreview('---\na: 1\n---\n' + 'x'.repeat(300)), 'x'.repeat(199) + '…');
-  assert.equal(firstContentLine(buildNoteText(full)), 16, 'two fences and fourteen fields');
+  assert.equal(firstContentLine(buildNoteText(full)), 18, 'two fences, fourteen fields and two rect lines');
   assert.equal(firstContentLine('---\na: 1\n---\n\n\n> q'), 5);
   assert.equal(firstContentLine('hello'), 0);
   assert.equal(firstContentLine('---\na: 1\n---\n\n'), -1);

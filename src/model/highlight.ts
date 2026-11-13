@@ -223,7 +223,11 @@ export function buildFrontmatter(h: Highlight): string {
   lines.push(`page: ${h.page}`);
   lines.push(`anchor: ${h.anchor}`);
   if (h.anchor === 'selection' && h.selection) lines.push(`selection: [${h.selection.join(', ')}]`);
-  lines.push(`rects: [${h.rects.map((r) => `[${r.map(num).join(', ')}]`).join(', ')}]`);
+  /* A block list, one rectangle a line: the flow form `[[x0, y0, x1, y1]]`
+     reads as a wikilink to anything that scans the note text for links.
+     Same YAML value either way, so notes in the flow form still read. */
+  lines.push('rects:');
+  for (const r of h.rects) lines.push(`  - [${r.map(num).join(', ')}]`);
   lines.push(`color: ${h.color}`);
   lines.push(`quote: ${yamlString(collapseWhitespace(h.quote))}`);
   if (h.anchor === 'rect' && h.image) lines.push(`image: ${yamlString(wikilink(h.image))}`);
