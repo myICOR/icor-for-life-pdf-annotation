@@ -1,4 +1,4 @@
-/* ICOR for Life - PDF Annotation. Highlights on Obsidian's built-in PDF
+/* ICOR PDF Annotation. Highlights on Obsidian's built-in PDF
  * viewer that are notes in the vault: one markdown note per highlight
  * with the position in the frontmatter and the user's note in the body;
  * a floating toolbar on a text selection and an area tool; every

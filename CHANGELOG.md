@@ -4,6 +4,11 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-11-23
+
+### Changed
+- The display name is now ICOR PDF Annotation (it was ICOR for Life - PDF Annotation). The plugin id stays `icor-for-life-pdf-annotation`, so installed vaults, settings and hotkeys carry on unchanged.
+
 ## [0.3.1] - 2026-11-23
 
 Ready for the Obsidian community directory's review.

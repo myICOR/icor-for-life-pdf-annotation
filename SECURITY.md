@@ -1,6 +1,6 @@
 # Security Policy
 
-ICOR for Life - PDF Annotation reads the open PDF's text layer, paints
+ICOR PDF Annotation reads the open PDF's text layer, paints
 over its pages, writes one markdown note per highlight (and one PNG per
 drawn box) into the vault, reads .canvas files to fill two frontmatter
 fields, and puts a link on the clipboard when you ask for one. It never

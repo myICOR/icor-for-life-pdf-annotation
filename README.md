@@ -1,4 +1,4 @@
-# ICOR for Life - PDF Annotation
+# ICOR PDF Annotation
 
 **Highlight a PDF and get a note, not a highlight.**
 

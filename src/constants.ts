@@ -1,5 +1,5 @@
 export const PLUGIN_ID = 'icor-for-life-pdf-annotation';
-export const PLUGIN_NAME = 'ICOR for Life - PDF Annotation';
+export const PLUGIN_NAME = 'ICOR PDF Annotation';
 /* Every DOM class this plugin adds starts with this. */
 export const CLASS_PREFIX = 'icor-pdfa-';
 /* The right-sidebar view. */
