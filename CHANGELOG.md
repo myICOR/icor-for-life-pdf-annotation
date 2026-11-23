@@ -4,6 +4,15 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.1] - 2026-11-23
+
+Ready for the Obsidian community directory's review.
+
+### Fixed
+- **0.2.1's fix is in this line too:** the quote and the image of a drawn box
+  no longer merge into one blockquote (it was released on its own and missed
+  0.3.0).
+
 ## [0.3.0] - 2026-11-23
 
 ICOR for Life 3.0 moves Inner World from `04 Inner World` to `02 Inner World`.
@@ -17,6 +26,15 @@ setting, once its vault has moved.
   folder on load once the vault has `02 Inner World` instead. A folder you
   chose yourself is left as it is. Existing highlight notes keep working
   wherever they are.
+
+## [0.2.1] - 2026-11-02
+
+### Fixed
+- **The quote and the image of a drawn box no longer merge into one
+  blockquote.** A new highlight leaves a blank line between them, and the
+  image keeps its colored frame and stays draggable. Highlight notes you
+  already have keep working and are not rewritten, so they still show the
+  old merged layout until you add that blank line yourself.
 
 ## [0.2.0] - 2026-09-21
 
