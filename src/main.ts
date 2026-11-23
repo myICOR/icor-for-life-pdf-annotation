@@ -19,7 +19,7 @@ import { buildEmbed, buildHighlightLink, buildNoteLink, nativeSubpath } from './
 import { copyText, openNoteForWriting } from './open';
 import { PdfRegistry } from './pdf/registry';
 import { registerHighlightCards } from './render/highlightCard';
-import { DEFAULT_SETTINGS, normaliseSettings } from './settings/model';
+import { DEFAULT_SETTINGS, followFolders, normaliseSettings } from './settings/model';
 import type { PdfaSettings } from './settings/model';
 import { PdfaSettingsTab } from './settings/SettingsTab';
 import { HighlightStore } from './store/HighlightStore';
@@ -37,7 +37,9 @@ export default class PdfAnnotationPlugin extends Plugin {
   private panelRevealed = false;
 
   override async onload(): Promise<void> {
-    this.settings = normaliseSettings(await this.loadData());
+    const followed = await followFolders(normaliseSettings(await this.loadData()), (path) => this.app.vault.adapter.exists(path));
+    this.settings = followed.settings;
+    if (followed.save) await this.saveSettings();
     const log = (message: string): void => this.log(message);
     this.store = new HighlightStore(this.app, log);
     this.writer = new HighlightWriter(this.app, this.store, { highlightsFolder: () => this.settings.highlightsFolder, log });

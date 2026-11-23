@@ -4,6 +4,20 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-23
+
+ICOR for Life 3.0 moves Inner World from `04 Inner World` to `02 Inner World`.
+The plugin follows, and so does an install that never changed the folder
+setting, once its vault has moved.
+
+### Changed
+- **The default highlights folder is `02 Inner World/Notes/Highlights`.** If
+  your settings still hold the 2.x default (`04 Inner World/Notes/Highlights`),
+  it stays while your vault still has `04 Inner World`, and follows to the new
+  folder on load once the vault has `02 Inner World` instead. A folder you
+  chose yourself is left as it is. Existing highlight notes keep working
+  wherever they are.
+
 ## [0.2.0] - 2026-09-21
 
 ### Changed

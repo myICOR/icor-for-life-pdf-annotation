@@ -8,8 +8,8 @@ import { cleanFolder, isOwnImage, linkTarget, readHighlight } from './build/pure
 const base = { type: 'pdf-highlight', highlight_id: 'k3f9x2mq7a1b', source_file: '[[D/paper.pdf]]', page: 3, anchor: 'rect', rects: [[0, 0, 10, 10]] };
 
 test('only the PNG the plugin wrote for the highlight counts as its image', () => {
-  const h = readHighlight({ ...base, image: '[[04 Inner World/Documents/passport.pdf]]' }, 'H/n.md');
-  assert.equal(h.image, '04 Inner World/Documents/passport.pdf', 'the field is read as written');
+  const h = readHighlight({ ...base, image: '[[02 Inner World/Notes/passport.pdf]]' }, 'H/n.md');
+  assert.equal(h.image, '02 Inner World/Notes/passport.pdf', 'the field is read as written');
   assert.equal(isOwnImage('pdf', 'passport', h), false, 'but it is never trashed with the note');
   assert.equal(isOwnImage('png', 'paper-p3-k3f9x2mq7a1b', h), true);
   assert.equal(isOwnImage('png', 'paper-p4-k3f9x2mq7a1b', h), false, 'another page');

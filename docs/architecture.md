@@ -21,7 +21,9 @@ the development Mac on 2026-09-07:
   tag and the manifest's `minAppVersion` of 1.13.0.
 - Flint's feasibility read of the same bundle:
   `03 WiP/2026-09-07-icor-for-life-pdf-annotation/flint-pdf-viewer-api-feasibility.md`
-  in the vault, with byte offsets into `app.js` and the viewer bundle.
+  in the vault, with byte offsets into `app.js` and the viewer bundle. (`03 WiP`
+  is where the 2.x development vault filed it; ICOR for Life 3.0 has no such
+  folder, and the path is kept as the record of where the read was made.)
 
 ## Modules
 
