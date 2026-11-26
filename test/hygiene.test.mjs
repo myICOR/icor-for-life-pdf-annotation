@@ -132,6 +132,19 @@ test('the stylesheet: prefixed selectors, Obsidian variables only, no hex, no pi
   }
 });
 
+test('the code names an ICOR for Life 2.x folder only to recognise an old default', () => {
+  const twoX = /\b0[0-7] (Daily Scratchpad|Inner World|Outer World|Assets|Databases|Planner|AI Team|WiP)\b/g;
+  const now = new Set(['00 Daily Notes', '02 Inner World', '03 Outer World', '04 Assets', '05 Databases', '06 Planner']);
+  const hits = [];
+  for (const f of sources) {
+    for (const line of stripComments(readFileSync(f, 'utf8')).split('\n')) {
+      const old = (line.match(twoX) ?? []).filter((m) => !now.has(m));
+      if (old.length && !/^export const (V2|LEGACY)_HIGHLIGHTS_FOLDER = /.test(line)) hits.push(`${f.slice(repo.length + 1)}: ${line.trim()}`);
+    }
+  }
+  assert.deepEqual(hits, []);
+});
+
 test('the built plugin bundles nothing but its own code', () => {
   const main = read('main.js');
   assert.match(main, /require\("obsidian"\)/);

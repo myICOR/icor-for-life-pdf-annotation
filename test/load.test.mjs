@@ -66,27 +66,29 @@ function fakeEl() {
   return el;
 }
 
-function fakeApp(obsidian) {
+function fakeApp(obsidian, folders = []) {
   const layoutReady = [];
+  const have = new Set(folders);
   const app = {
     layoutReady,
     workspace: { ...obsidian.events(), onLayoutReady: (cb) => layoutReady.push(cb), getLeavesOfType: () => [], getMostRecentLeaf: () => null, getActiveViewOfType: () => null, getRightLeaf: () => null, revealLeaf: async () => {}, openLinkText: async () => {} },
-    vault: { ...obsidian.events(), handlers: {}, on(name, fn) { (this.handlers[name] ??= []).push(fn); return { ref: true }; }, getMarkdownFiles: () => [], getFiles: () => [], getFileByPath: () => null, getAbstractFileByPath: () => null, cachedRead: async () => '', getResourcePath: () => '' },
+    vault: { ...obsidian.events(), handlers: {}, on(name, fn) { (this.handlers[name] ??= []).push(fn); return { ref: true }; }, getMarkdownFiles: () => [], getFiles: () => [], getFileByPath: () => null, getAbstractFileByPath: () => null, cachedRead: async () => '', getResourcePath: () => '', adapter: { exists: async (p) => have.has(p) } },
     metadataCache: { ...obsidian.events(), resolvedLinks: {}, getFileCache: () => null, getFirstLinkpathDest: () => null },
     fileManager: { processFrontMatter: async () => {}, trashFile: async () => {}, getAvailablePathForAttachment: async (n) => n },
   };
   return app;
 }
 
-async function loadPlugin() {
+async function loadPlugin({ data = null, folders = [] } = {}) {
   const obsidian = stubObsidian();
   const code = readFileSync(resolve(repo, 'main.js'), 'utf8');
   const module = { exports: {} };
   const context = vm.createContext({ module, exports: module.exports, require: (name) => { if (name === 'obsidian') return obsidian; throw new Error(`unexpected require: ${name}`); }, console, navigator: { clipboard: { writeText: async () => {} } } });
   vm.runInContext(code, context, { filename: 'main.js' });
   const PluginClass = module.exports.default ?? module.exports;
-  const app = fakeApp(obsidian);
+  const app = fakeApp(obsidian, folders);
   const plugin = new PluginClass(app, JSON.parse(readFileSync(resolve(repo, 'manifest.json'), 'utf8')));
+  plugin.loadData = async () => data;
   return { plugin, app, obsidian };
 }
 
@@ -97,12 +99,46 @@ test('main.js loads, the plugin constructs and onload wires the commands, the vi
   assert.deepEqual(Object.keys(plugin.views), ['icor-pdf-highlights']);
   assert.equal(plugin.postProcessors.length, 1);
   assert.equal(plugin.settingTabs.length, 1);
-  assert.equal(plugin.settings.highlightsFolder, '04 Inner World/Notes/Highlights');
+  assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights');
   for (const cb of app.layoutReady) cb();
   /* Every command's check runs against an empty workspace without throwing
      and, with nothing to act on, reports itself unavailable. */
   for (const c of plugin.commands) if (c.checkCallback) assert.equal(c.checkCallback(true), false, c.id);
   plugin.onunload();
+});
+
+test('ICOR for Life 3.0 folders: the 2.x default stays in a 2.x vault and follows a moved one; a chosen folder never moves', async () => {
+  const twoX = '04 Inner World/Notes/Highlights';
+  {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX, defaultColor: 'blue' }, folders: ['04 Inner World', '05 Assets'] });
+    await plugin.onload();
+    assert.equal(plugin.settings.highlightsFolder, twoX, 'the vault still has 04 Inner World');
+    assert.equal(plugin.saved, undefined, 'nothing saved');
+  }
+  {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX, defaultColor: 'blue' }, folders: ['02 Inner World', '04 Assets'] });
+    await plugin.onload();
+    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'the vault has moved');
+    assert.equal(plugin.saved?.highlightsFolder, '02 Inner World/Notes/Highlights', 'and the move is saved');
+    assert.equal(plugin.saved?.defaultColor, 'blue', 'with the other settings as they were');
+  }
+  {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: '04 Inner World/Documents/Highlights' }, folders: ['02 Inner World'] });
+    await plugin.onload();
+    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'the oldest default follows too');
+  }
+  {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX }, folders: [] });
+    await plugin.onload();
+    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'neither folder yet: the new default');
+    assert.equal(plugin.saved, undefined, 'but not saved until the vault has it');
+  }
+  for (const folder of ['Highlights', '04 Inner World/My Highlights']) {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: folder }, folders: ['02 Inner World'] });
+    await plugin.onload();
+    assert.equal(plugin.settings.highlightsFolder, folder, 'a chosen folder stays');
+    assert.equal(plugin.saved, undefined);
+  }
 });
 
 test('the settings tab declares one group per settings group with the rows', async () => {

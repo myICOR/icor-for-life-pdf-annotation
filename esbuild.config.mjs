@@ -1,4 +1,4 @@
-/* Build ICOR for Life - PDF Annotation into a single CommonJS main.js for Obsidian.
+/* Build ICOR PDF Annotation into a single CommonJS main.js for Obsidian.
  *
  * Everything the plugin needs at runtime comes from the host: `obsidian` is
  * external, so main.js carries only this plugin's own code. styles.css is

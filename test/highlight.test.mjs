@@ -37,8 +37,8 @@ function readFrontmatter(text) {
 const full = {
   id: 'abc123def456',
   notePath: 'H/x/2026-09-07-101500-p3-abc1.md',
-  sourceFile: '04 Inner World/Documents/_files/paper.pdf',
-  document: '04 Inner World/Documents/paper',
+  sourceFile: '02 Inner World/Notes/_files/paper.pdf',
+  document: '02 Inner World/Notes/paper',
   page: 3,
   anchor: 'selection',
   color: 'green',
@@ -76,8 +76,8 @@ test('the note text round-trips through the reader', () => {
   const text = buildNoteText(full);
   const fm = readFrontmatter(text);
   assert.equal(fm.type, 'pdf-highlight');
-  assert.equal(fm.source_file, '[[04 Inner World/Documents/_files/paper.pdf]]');
-  assert.equal(fm.document, '[[04 Inner World/Documents/paper]]');
+  assert.equal(fm.source_file, '[[02 Inner World/Notes/_files/paper.pdf]]');
+  assert.equal(fm.document, '[[02 Inner World/Notes/paper]]');
   assert.deepEqual(fm.cssclasses, ['icor-pdf-highlight']);
   const back = readHighlight(fm, full.notePath);
   assert.deepEqual(back, full);
@@ -86,12 +86,12 @@ test('the note text round-trips through the reader', () => {
 
 test('the body is the quote line, a blank and the image line for a rect, a blank, the heading, a blank', () => {
   assert.equal(buildBody(full), `> the "quoted" text, with a \\ backslash ^quote\n\n${NOTE_HEADING}\n\n`);
-  const rect = { ...full, anchor: 'rect', selection: null, quote: '', image: '05 Assets/Images/paper-p3-abc123def456.png', rects: [[10, 10, 100, 50]] };
-  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n\n![[05 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
+  const rect = { ...full, anchor: 'rect', selection: null, quote: '', image: '04 Assets/Images/paper-p3-abc123def456.png', rects: [[10, 10, 100, 50]] };
+  assert.equal(buildBody(rect), `> Area on page 3 ^quote\n\n![[04 Assets/Images/paper-p3-abc123def456.png]] ^image\n\n${NOTE_HEADING}\n\n`);
   const fm = readFrontmatter(buildNoteText(rect));
   assert.equal(fm.anchor, 'rect');
   assert.equal(fm.selection, undefined);
-  assert.equal(fm.image, '[[05 Assets/Images/paper-p3-abc123def456.png]]');
+  assert.equal(fm.image, '[[04 Assets/Images/paper-p3-abc123def456.png]]');
   assert.deepEqual(readHighlight(fm, rect.notePath), rect);
   assert.doesNotMatch(buildFrontmatter({ ...full, document: null }), /document:/);
 });
@@ -187,10 +187,10 @@ test('ordering: page, then top of the page, then left', () => {
 });
 
 test('a document note names the PDF by path or by file name', () => {
-  assert.equal(namesPdf('[[04 Inner World/Documents/_files/paper.pdf]]', '04 Inner World/Documents/_files/paper.pdf'), true);
-  assert.equal(namesPdf('paper.pdf', '04 Inner World/Documents/_files/paper.pdf'), true);
-  assert.equal(namesPdf('Dropbox/Legal/Paper.PDF', '04 Inner World/Documents/_files/paper.pdf'), true);
-  assert.equal(namesPdf('other.pdf', '04 Inner World/Documents/_files/paper.pdf'), false);
+  assert.equal(namesPdf('[[02 Inner World/Notes/_files/paper.pdf]]', '02 Inner World/Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('paper.pdf', '02 Inner World/Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('Dropbox/Legal/Paper.PDF', '02 Inner World/Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('other.pdf', '02 Inner World/Notes/_files/paper.pdf'), false);
   assert.equal(namesPdf(undefined, 'x.pdf'), false);
 });
 
