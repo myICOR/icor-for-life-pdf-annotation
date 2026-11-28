@@ -37,8 +37,8 @@ function readFrontmatter(text) {
 const full = {
   id: 'abc123def456',
   notePath: 'H/x/2026-09-07-101500-p3-abc1.md',
-  sourceFile: '02 Inner World/Notes/_files/paper.pdf',
-  document: '02 Inner World/Notes/paper',
+  sourceFile: '04 Notes/_files/paper.pdf',
+  document: '04 Notes/paper',
   page: 3,
   anchor: 'selection',
   color: 'green',
@@ -76,8 +76,8 @@ test('the note text round-trips through the reader', () => {
   const text = buildNoteText(full);
   const fm = readFrontmatter(text);
   assert.equal(fm.type, 'pdf-highlight');
-  assert.equal(fm.source_file, '[[02 Inner World/Notes/_files/paper.pdf]]');
-  assert.equal(fm.document, '[[02 Inner World/Notes/paper]]');
+  assert.equal(fm.source_file, '[[04 Notes/_files/paper.pdf]]');
+  assert.equal(fm.document, '[[04 Notes/paper]]');
   assert.deepEqual(fm.cssclasses, ['icor-pdf-highlight']);
   const back = readHighlight(fm, full.notePath);
   assert.deepEqual(back, full);
@@ -187,10 +187,10 @@ test('ordering: page, then top of the page, then left', () => {
 });
 
 test('a document note names the PDF by path or by file name', () => {
-  assert.equal(namesPdf('[[02 Inner World/Notes/_files/paper.pdf]]', '02 Inner World/Notes/_files/paper.pdf'), true);
-  assert.equal(namesPdf('paper.pdf', '02 Inner World/Notes/_files/paper.pdf'), true);
-  assert.equal(namesPdf('Dropbox/Legal/Paper.PDF', '02 Inner World/Notes/_files/paper.pdf'), true);
-  assert.equal(namesPdf('other.pdf', '02 Inner World/Notes/_files/paper.pdf'), false);
+  assert.equal(namesPdf('[[04 Notes/_files/paper.pdf]]', '04 Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('paper.pdf', '04 Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('Dropbox/Legal/Paper.PDF', '04 Notes/_files/paper.pdf'), true);
+  assert.equal(namesPdf('other.pdf', '04 Notes/_files/paper.pdf'), false);
   assert.equal(namesPdf(undefined, 'x.pdf'), false);
 });
 

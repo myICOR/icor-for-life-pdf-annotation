@@ -99,7 +99,7 @@ test('main.js loads, the plugin constructs and onload wires the commands, the vi
   assert.deepEqual(Object.keys(plugin.views), ['icor-pdf-highlights']);
   assert.equal(plugin.postProcessors.length, 1);
   assert.equal(plugin.settingTabs.length, 1);
-  assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights');
+  assert.equal(plugin.settings.highlightsFolder, '04 Notes/Highlights');
   for (const cb of app.layoutReady) cb();
   /* Every command's check runs against an empty workspace without throwing
      and, with nothing to act on, reports itself unavailable. */
@@ -107,34 +107,36 @@ test('main.js loads, the plugin constructs and onload wires the commands, the vi
   plugin.onunload();
 });
 
-test('ICOR for Life 3.0 folders: the 2.x default stays in a 2.x vault and follows a moved one; a chosen folder never moves', async () => {
-  const twoX = '04 Inner World/Notes/Highlights';
-  {
-    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX, defaultColor: 'blue' }, folders: ['04 Inner World', '05 Assets'] });
-    await plugin.onload();
-    assert.equal(plugin.settings.highlightsFolder, twoX, 'the vault still has 04 Inner World');
-    assert.equal(plugin.saved, undefined, 'nothing saved');
+test('the Workbench layout: an old default stays in a vault that still has its folder and follows a moved one; a chosen folder never moves', async () => {
+  const NEW = ['02 My Life', '04 Notes', '10 Files'];
+  for (const [old, top] of [['04 Inner World/Notes/Highlights', '04 Inner World'], ['02 Inner World/Notes/Highlights', '02 Inner World']]) {
+    {
+      const { plugin } = await loadPlugin({ data: { highlightsFolder: old, defaultColor: 'blue' }, folders: [top] });
+      await plugin.onload();
+      assert.equal(plugin.settings.highlightsFolder, old, `the vault still has ${top}`);
+      assert.equal(plugin.saved, undefined, 'nothing saved');
+    }
+    {
+      const { plugin } = await loadPlugin({ data: { highlightsFolder: old, defaultColor: 'blue' }, folders: NEW });
+      await plugin.onload();
+      assert.equal(plugin.settings.highlightsFolder, '04 Notes/Highlights', 'the vault has moved');
+      assert.equal(plugin.saved?.highlightsFolder, '04 Notes/Highlights', 'and the move is saved');
+      assert.equal(plugin.saved?.defaultColor, 'blue', 'with the other settings as they were');
+    }
   }
   {
-    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX, defaultColor: 'blue' }, folders: ['02 Inner World', '04 Assets'] });
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: '04 Inner World/Documents/Highlights' }, folders: NEW });
     await plugin.onload();
-    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'the vault has moved');
-    assert.equal(plugin.saved?.highlightsFolder, '02 Inner World/Notes/Highlights', 'and the move is saved');
-    assert.equal(plugin.saved?.defaultColor, 'blue', 'with the other settings as they were');
+    assert.equal(plugin.settings.highlightsFolder, '04 Notes/Highlights', 'the oldest default follows too');
   }
   {
-    const { plugin } = await loadPlugin({ data: { highlightsFolder: '04 Inner World/Documents/Highlights' }, folders: ['02 Inner World'] });
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: '02 Inner World/Notes/Highlights' }, folders: [] });
     await plugin.onload();
-    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'the oldest default follows too');
-  }
-  {
-    const { plugin } = await loadPlugin({ data: { highlightsFolder: twoX }, folders: [] });
-    await plugin.onload();
-    assert.equal(plugin.settings.highlightsFolder, '02 Inner World/Notes/Highlights', 'neither folder yet: the new default');
+    assert.equal(plugin.settings.highlightsFolder, '04 Notes/Highlights', 'neither folder yet: the new default');
     assert.equal(plugin.saved, undefined, 'but not saved until the vault has it');
   }
-  for (const folder of ['Highlights', '04 Inner World/My Highlights']) {
-    const { plugin } = await loadPlugin({ data: { highlightsFolder: folder }, folders: ['02 Inner World'] });
+  for (const folder of ['Highlights', '04 Inner World/My Highlights', '02 Inner World/Notes/Mine']) {
+    const { plugin } = await loadPlugin({ data: { highlightsFolder: folder }, folders: NEW });
     await plugin.onload();
     assert.equal(plugin.settings.highlightsFolder, folder, 'a chosen folder stays');
     assert.equal(plugin.saved, undefined);

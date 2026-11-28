@@ -17,16 +17,19 @@ export interface PdfaSettings {
   debug: boolean;
 }
 
-export const DEFAULT_HIGHLIGHTS_FOLDER = '02 Inner World/Notes/Highlights';
+export const DEFAULT_HIGHLIGHTS_FOLDER = '04 Notes/Highlights';
 
-/* The default of an ICOR for Life 2.x vault, before 3.0 moved Inner World
-   from `04 Inner World` to `02 Inner World`. `rememberColor` persists the
-   whole settings object, so every install that ever made a highlight holds
-   this string in data.json without having chosen it. It is kept while the
-   vault still has the 2.x folder and follows the vault once it has moved
-   (followFolders, which needs the vault and so runs on load, not here).
-   Only this exact string is read that way; any other value is the user's. */
+/* The defaults of older vaults: 2.x (`04 Inner World`) and early 3.0
+   (`02 Inner World`), before the Workbench layout gave Notes its own top
+   folder. `rememberColor` persists the whole settings object, so every
+   install that ever made a highlight holds one of these in data.json without
+   having chosen it. It is kept while the vault still has that top folder and
+   follows the vault once it has moved (followFolders, which needs the vault
+   and so runs on load, not here). Only these exact strings are read that
+   way; any other value is the user's. */
 export const V2_HIGHLIGHTS_FOLDER = '04 Inner World/Notes/Highlights';
+export const EARLY_3_HIGHLIGHTS_FOLDER = '02 Inner World/Notes/Highlights';
+export const OLD_HIGHLIGHTS_FOLDERS: readonly string[] = [V2_HIGHLIGHTS_FOLDER, EARLY_3_HIGHLIGHTS_FOLDER];
 
 /* The default before Scaffold 1.17.0 renamed `04 Inner World/Documents` to
    `04 Inner World/Notes`: a 2.x value, so it becomes the 2.x default above
@@ -85,13 +88,14 @@ export function normaliseSettings(raw: unknown): PdfaSettings {
 
 const topFolder = (path: string): string => path.split('/')[0] ?? path;
 
-/* The settings once the vault is known: the 2.x default stays while the
-   vault still has its top folder (`04 Inner World`); otherwise it becomes
-   the 3.0 default, and `save` says the change can be written, which is once
-   the vault has the new top folder. Until then the 2.x value is read again
+/* The settings once the vault is known: an old default stays while the
+   vault still has its top folder (`04 Inner World`, `02 Inner World`);
+   otherwise it becomes the current default, and `save` says the change can be written, which is once
+   the vault has the new top folder. Until then the old value is read again
    on the next load. `exists` asks the vault by path, so this works before
    Obsidian has listed the files. Same object back when nothing changes. */
 export async function followFolders(settings: PdfaSettings, exists: (path: string) => Promise<boolean>): Promise<{ settings: PdfaSettings; save: boolean }> {
-  if (settings.highlightsFolder !== V2_HIGHLIGHTS_FOLDER || await exists(topFolder(V2_HIGHLIGHTS_FOLDER))) return { settings, save: false };
+  const saved = settings.highlightsFolder;
+  if (!OLD_HIGHLIGHTS_FOLDERS.includes(saved) || await exists(topFolder(saved))) return { settings, save: false };
   return { settings: { ...settings, highlightsFolder: DEFAULT_HIGHLIGHTS_FOLDER }, save: await exists(topFolder(DEFAULT_HIGHLIGHTS_FOLDER)) };
 }

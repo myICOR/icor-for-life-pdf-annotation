@@ -4,6 +4,11 @@ All notable changes to ICOR for Life - PDF Annotation.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-11-28
+
+### Changed
+- The Workbench layout: new highlights go to `04 Notes/Highlights`. A saved old default (`02 Inner World/Notes/Highlights` from early 3.0, `04 Inner World/Notes/Highlights` from 2.x) stays while the vault still has that folder, and follows once the vault has moved. A folder you chose is never moved.
+
 ## [0.3.2] - 2026-11-23
 
 ### Changed
