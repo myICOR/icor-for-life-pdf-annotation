@@ -118,10 +118,10 @@ test('every setting has exactly one row and a default the normaliser keeps', () 
     debug: true,
   });
   assert.equal(normaliseSettings({ defaultColor: 'green' }).lastColor, 'green', 'the last color starts as the default');
-  /* ICOR for Life 3.0 moved Inner World to 02 Inner World: a new install
+  /* The Workbench layout gave Notes its own top folder: a new install
      writes there. */
-  assert.equal(DEFAULT_HIGHLIGHTS_FOLDER, '02 Inner World/Notes/Highlights');
-  assert.equal(normaliseSettings({}).highlightsFolder, '02 Inner World/Notes/Highlights');
+  assert.equal(DEFAULT_HIGHLIGHTS_FOLDER, '04 Notes/Highlights');
+  assert.equal(normaliseSettings({}).highlightsFolder, '04 Notes/Highlights');
   /* The 1.17.0 rename of Documents to Notes: the oldest default in
      data.json moves to the 2.x default (followFolders takes it from there,
      with the vault in hand); a folder the user chose does not. */

@@ -21,7 +21,7 @@ test('names lose what a file name or a wikilink cannot carry', () => {
 });
 
 test('the folder is the root plus the PDF basename', () => {
-  assert.equal(folderFor('02 Inner World/Notes/Highlights', 'x/y/Paper Title.pdf'), '02 Inner World/Notes/Highlights/Paper Title');
+  assert.equal(folderFor('04 Notes/Highlights', 'x/y/Paper Title.pdf'), '04 Notes/Highlights/Paper Title');
   assert.equal(folderFor('H', 'x/???.pdf'), 'H/PDF');
 });
 
